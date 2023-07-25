@@ -1,0 +1,27 @@
+name: "test"
+post: 8080
+
+
+#log:
+#    level: "debug"
+#    file_name: "video.log"
+#    log_path: "../../log/videosvr/"
+#    max_size: 200
+#    max_age: 30
+#    max_backups: 7
+#
+#mysql:
+#    host: "
+#    port: "
+#    database: "
+#    username: "
+#    password: "
+#
+#
+#redis:
+#    host: "
+#    password: ""
+#    db: 0
+#    port: 6379
+#    PoolSize: 10
+
