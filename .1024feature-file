@@ -1,6 +1,0 @@
-fileChangeLogs:
-  - '1'
-  - '.1024'
-  - go.mod
-  - main.go
-  - README.md
