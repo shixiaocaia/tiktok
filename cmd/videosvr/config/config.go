@@ -2,22 +2,16 @@ package config
 
 import (
 	"fmt"
-	"gatewaysvr/log"
 	"github.com/fsnotify/fsnotify"
 	"github.com/spf13/viper"
+	"videosvr/log"
 )
 
 var globalConfig = new(GlobalConfig)
 
 type GlobalConfig struct {
-	*SvrConfig
-	Ping string
-}
-
-type SvrConfig struct {
-	Name string
-	Mode string
 	Port int
+	Ping string
 }
 
 // Init 初始化配置

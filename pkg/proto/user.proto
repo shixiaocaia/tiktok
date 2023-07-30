@@ -1,0 +1,164 @@
+syntax = "proto3";
+
+option go_package = "../pb;pb";
+// protoc --proto_path=. --go_out=. ./*.proto
+// protoc -I . user.proto  --go_out=plugins=grpc:.
+
+import "common.proto";
+
+service UserService {
+  rpc GetUserInfo(GetUserInfoRequest) returns (GetUserInfoResponse); // 获取用户信息
+  rpc GetUserInfoDict(GetUserInfoDictRequest) returns (GetUserInfoDictResponse); // 获取用户信息字典
+  rpc CheckPassWord(CheckPassWordRequest) returns (CheckPassWordResponse); //检查密码
+  rpc Register(RegisterRequest) returns (RegisterResponse); // 注册
+  rpc GetUserInfoList(GetUserInfoListRequest) returns (GetUserInfoListResponse); // 获取用户列表信息
+  rpc CacheChangeUserCount(CacheChangeUserCountReq) returns (CacheChangeUserCountRsp);
+  rpc CacheGetAuthor (CacheGetAuthorReq) returns (CacheGetAuthorRsp);
+  // 更新 我的获赞数
+  rpc UpdateUserFavoritedCount(UpdateUserFavoritedCountReq) returns (UpdateUserFavoritedCountRsp);
+  // 更新我喜欢的视频总数
+  rpc UpdateUserFavoriteCount(UpdateUserFavoriteCountReq) returns (UpdateUserFavoriteCountRsp);
+  // 更新我的关注数
+  rpc UpdateUserFollowCount(UpdateUserFollowCountReq) returns (UpdateUserFollowCountRsp);
+
+  // 更新我的粉丝数
+  rpc UpdateUserFollowerCount(UpdateUserFollowerCountReq) returns (UpdateUserFollowerCountRsp);
+}
+
+// UpdateUserFollowCount
+message UpdateUserFollowCountReq {
+  int64 user_id = 1;
+  int64 action_type = 2;
+}
+
+message UpdateUserFollowCountRsp {
+  CommonResponse common_rsp = 1;
+}
+// ******
+
+// UpdateUserFollowerCount
+message UpdateUserFollowerCountReq {
+  int64 user_id = 1;
+  int64 action_type = 2;
+}
+
+message UpdateUserFollowerCountRsp {
+  CommonResponse common_rsp = 1;
+}
+// ******
+
+
+// UpdateUserFavoritedCount
+message UpdateUserFavoritedCountReq {
+  int64 user_id = 1;
+  int64 action_type = 2;
+}
+
+message UpdateUserFavoritedCountRsp {
+  CommonResponse common_rsp = 1;
+}
+// ******
+
+// UpdateUserFavoriteCount
+message UpdateUserFavoriteCountReq {
+  int64 user_id = 1;
+  int64 action_type = 2;
+}
+
+message UpdateUserFavoriteCountRsp {
+  CommonResponse common_rsp = 1;
+}
+// ******
+
+
+// ******
+message GetUserInfoDictRequest {
+  repeated int64 user_id_list = 1;
+}
+
+message GetUserInfoDictResponse {
+  map<int64, UserInfo> user_info_dict = 1;
+}
+// ******
+
+// 用户信息
+message UserInfo {
+  int64 id = 1; // 用户id​
+  string name = 2; // 用户名称​
+  int64 follow_count = 3; // 关注总数
+  int64 follower_count = 4; // 粉丝总数​
+  bool is_follow = 5; // true-已关注，false-未关注
+  string avatar = 6; //头像地址
+  string background_image = 7;//背景图片地址
+  string signature = 8;//个性签名
+  int64 total_favorited = 9;
+  int64 favorite_count = 10;
+}
+
+
+// ******
+message GetUserInfoRequest {
+  int64 id = 1;
+}
+
+
+message GetUserInfoResponse {
+  UserInfo user_info = 1;
+}
+// ******
+
+// ******
+message CheckPassWordRequest {
+  string username = 1;
+  string password = 2;
+}
+
+message CheckPassWordResponse {
+  int64 user_id = 2;
+  string  token = 3;
+}
+// ******
+
+// ******
+message RegisterRequest {
+  string username = 1;
+  string password = 2;
+}
+
+message RegisterResponse {
+  int64 user_id = 1;
+  string token = 2;
+}
+// ******
+
+// ******
+message GetUserInfoListRequest {
+  repeated int64 id_list = 1;
+}
+
+message GetUserInfoListResponse {
+  repeated UserInfo user_info_list = 1;
+}
+// ******
+
+// ******
+message CacheChangeUserCountReq {
+  int64 user_id = 1;
+  int64 op = 2;
+  string count_type = 3;
+}
+
+message CacheChangeUserCountRsp {
+  CommonResponse common_rsp = 1;
+}
+// ******
+
+// ******
+message CacheGetAuthorReq {
+  int64 video_id = 1;
+}
+
+message CacheGetAuthorRsp {
+  int64 user_id = 1;
+}
+// ******

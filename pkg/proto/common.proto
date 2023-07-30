@@ -1,0 +1,8 @@
+syntax = "proto3";
+
+option go_package = "../pb;pb";
+
+message CommonResponse {
+  int64 code = 1;
+  string msg = 2;
+}

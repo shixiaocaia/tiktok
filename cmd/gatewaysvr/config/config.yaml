@@ -1,3 +1,6 @@
-port: 8080
-ping: "hello world"
+SvrConfig:
+  port: 8080
+  ping: "hello world"
+  name: "gatewaysvr"
+  mode: "dev"
 

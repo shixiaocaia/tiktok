@@ -2,10 +2,10 @@ package main
 
 import (
 	"fmt"
-	"gatewaysvr/config"
-	"gatewaysvr/log"
-	"gatewaysvr/routes"
 	"go.uber.org/zap"
+	"videosvr/config"
+	"videosvr/log"
+	"videosvr/routes"
 )
 
 func Init() {

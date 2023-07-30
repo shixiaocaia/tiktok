@@ -1,14 +1,20 @@
 package routes
 
 import (
+	"gatewaysvr/config"
+	"gatewaysvr/controller"
+	"gatewaysvr/log"
 	"github.com/gin-gonic/gin"
-	"github.com/shixiaocaia/tiktok/cmd/gatewaysvr/config"
-	"github.com/shixiaocaia/tiktok/cmd/gatewaysvr/log"
 	"net/http"
 )
 
 func SetRoute() *gin.Engine {
-	r := gin.Default()
+	if config.GetGlobalConfig().Mode == gin.ReleaseMode {
+		gin.SetMode(gin.ReleaseMode)
+	} else {
+		gin.SetMode(gin.DebugMode)
+	}
+	r := gin.New()
 
 	r.GET("/ping", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{
@@ -16,6 +22,12 @@ func SetRoute() *gin.Engine {
 		})
 		log.Info(config.GetGlobalConfig().Ping)
 	})
+
+	douyin := r.Group("/douyin/")
+	{
+
+		douyin.GET("/feed/", controller.Feed)
+	}
 
 	return r
 }
