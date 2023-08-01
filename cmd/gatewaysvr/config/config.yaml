@@ -1,6 +1,19 @@
+ping: "hello world"
+
 SvrConfig:
-  port: 8080
-  ping: "hello world"
-  name: "gatewaysvr"
+  port: 8005
   mode: "dev"
+  user_svr_name: "usersvr"
+  video_svr_name: "videosvr"
+  favorite_svr_name: "favoritesvr"
+  relation_svr_name: "relationsvr"
+  comment_svr_name: "commentsvr"
+
+
+ConsulConfig:
+    host: ""
+    port: 8500
+    tags:
+      - "gatewaysvr"
+
 

@@ -1,10 +1,9 @@
 package routes
 
 import (
-	"gatewaysvr/config"
-	"gatewaysvr/controller"
-	"gatewaysvr/log"
 	"github.com/gin-gonic/gin"
+	"github.com/shixiaocaia/tiktok/cmd/gatewaysvr/config"
+	"github.com/shixiaocaia/tiktok/cmd/gatewaysvr/log"
 	"net/http"
 )
 
@@ -23,11 +22,11 @@ func SetRoute() *gin.Engine {
 		log.Info(config.GetGlobalConfig().Ping)
 	})
 
-	douyin := r.Group("/douyin/")
-	{
-
-		douyin.GET("/feed/", controller.Feed)
-	}
+	//douyin := r.Group("/douyin/")
+	//{
+	//
+	//	douyin.GET("/feed/", controller.Feed)
+	//}
 
 	return r
 }

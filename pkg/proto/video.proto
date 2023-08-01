@@ -66,7 +66,7 @@ message PublishVideoRequest {
 }
 
 message PublishVideoResponse {
-
+  CommonResponse common_rsp = 1;
 }
 
 message GetFeedListRequest {
