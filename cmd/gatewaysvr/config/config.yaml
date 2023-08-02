@@ -1,17 +1,18 @@
 ping: "hello world"
 
-SvrConfig:
+svr_config:
   port: 8005
   mode: "dev"
+  host: "117.72.16.121"
   user_svr_name: "usersvr"
   video_svr_name: "videosvr"
   favorite_svr_name: "favoritesvr"
   relation_svr_name: "relationsvr"
   comment_svr_name: "commentsvr"
+  test_svr_name: "testsvr"
 
-
-ConsulConfig:
-    host: ""
+consul:
+    host: "117.72.16.121"
     port: 8500
     tags:
       - "gatewaysvr"

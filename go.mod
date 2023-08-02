@@ -5,7 +5,9 @@ go 1.20
 require (
 	github.com/fsnotify/fsnotify v1.6.0
 	github.com/gin-gonic/gin v1.9.1
+	github.com/hashicorp/consul/api v1.20.0
 	github.com/mbobakov/grpc-consul-resolver v1.5.2
+	github.com/satori/go.uuid v1.2.0
 	github.com/spf13/viper v1.16.0
 	go.uber.org/zap v1.24.0
 	google.golang.org/grpc v1.57.0
@@ -86,7 +88,6 @@ require (
 	github.com/gostaticanalysis/comment v1.4.2 // indirect
 	github.com/gostaticanalysis/forcetypeassert v0.1.0 // indirect
 	github.com/gostaticanalysis/nilerr v0.1.1 // indirect
-	github.com/hashicorp/consul/api v1.20.0 // indirect
 	github.com/hashicorp/errwrap v1.1.0 // indirect
 	github.com/hashicorp/go-cleanhttp v0.5.2 // indirect
 	github.com/hashicorp/go-hclog v1.5.0 // indirect

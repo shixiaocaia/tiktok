@@ -1,5 +1,14 @@
 package controller
 
+import (
+	"github.com/gin-gonic/gin"
+	"github.com/shixiaocaia/tiktok/cmd/gatewaysvr/config"
+	"github.com/shixiaocaia/tiktok/cmd/gatewaysvr/log"
+	"github.com/shixiaocaia/tiktok/cmd/gatewaysvr/utils"
+	"github.com/shixiaocaia/tiktok/pkg/pb"
+	"net/http"
+)
+
 //func Feed(ctx *gin.Context) {
 //	//todo 判断用户是否登录，先默认不登陆
 //
@@ -17,3 +26,26 @@ package controller
 //	// 是否点赞，是否关注这个视频
 //
 //}
+
+func Ping(ctx *gin.Context) {
+	ctx.JSON(200, gin.H{
+		"message": config.GetGlobalConfig().Ping,
+	})
+}
+
+func Greet(ctx *gin.Context) {
+	resp, err := utils.GetGreeterClient().SayHello(ctx, &pb.HelloRequest{
+		Name: "tiktok",
+	})
+
+	if err != nil {
+		log.Error("Greet error", err)
+		ctx.JSON(http.StatusOK, gin.H{
+			"message": err.Error(),
+		})
+	}
+
+	ctx.JSON(200, gin.H{
+		"message": resp.Message,
+	})
+}

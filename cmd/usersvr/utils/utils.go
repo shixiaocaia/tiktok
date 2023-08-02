@@ -15,7 +15,6 @@ import (
 
 var (
 	UserSvrClient pb.UserServiceClient
-	GreeterClient pb.GreeterClient
 )
 
 func GetCurrentTime() int64 {
@@ -23,8 +22,8 @@ func GetCurrentTime() int64 {
 }
 
 func InitSvrConn() {
-	//UserSvrClient = NewUserSvrClient(config.GetGlobalConfig().SvrConfig.UserSvrName)
-	GreeterClient = NewGreeterClient(config.GetGlobalConfig().SvrConfig.TestSvrName)
+	UserSvrClient = NewUserSvrClient(config.GetGlobalConfig().SvrConfig.UserSvrName)
+
 }
 
 func NewSvrConn(svrName string) (*grpc.ClientConn, error) {
@@ -46,22 +45,10 @@ func NewSvrConn(svrName string) (*grpc.ClientConn, error) {
 	return conn, nil
 }
 
-func GetGreeterClient() pb.GreeterClient {
-	return GreeterClient
-}
-
 func NewUserSvrClient(svrName string) pb.UserServiceClient {
 	conn, err := NewSvrConn(svrName)
 	if err != nil {
 		return nil
 	}
 	return pb.NewUserServiceClient(conn)
-}
-
-func NewGreeterClient(svrName string) pb.GreeterClient {
-	conn, err := NewSvrConn(svrName)
-	if err != nil {
-		return nil
-	}
-	return pb.NewGreeterClient(conn)
 }

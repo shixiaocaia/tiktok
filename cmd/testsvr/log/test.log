@@ -1,0 +1,71 @@
+2023-07-29T16:03:19.443+0800	[34mINFO[0m	gatewaysvr/main.go:17	log init success
+2023-07-29T16:04:31.876+0800	[34mINFO[0m	gatewaysvr/main.go:17	log init success
+2023-07-29T16:04:35.810+0800	[34mINFO[0m	routes/route.go:16	pong
+2023-07-29T16:20:19.906+0800	[34mINFO[0m	gatewaysvr/main.go:17	log init success
+2023-07-29T16:20:32.693+0800	[34mINFO[0m	routes/route.go:16	pong
+2023-07-29T16:20:44.443+0800	[34mINFO[0m	routes/route.go:16	pong
+2023-07-29T16:22:28.210+0800	[34mINFO[0m	gatewaysvr/main.go:18	log init success
+2023-07-29T16:22:34.517+0800	[34mINFO[0m	routes/route.go:17	hello world
+2023-07-30T15:55:10.766+0800	[34mINFO[0m	gatewaysvr/main.go:18	log init success
+2023-07-30T15:55:22.403+0800	[34mINFO[0m	routes/route.go:17	hello world
+2023-07-30T16:27:24.494+0800	[34mINFO[0m	gatewaysvr/main.go:18	log init success
+2023-07-30T16:27:43.750+0800	[34mINFO[0m	routes/route.go:17	hello world
+2023-08-01T22:42:05.206+0800	[34mINFO[0m	gatewaysvr/main.go:19	log init success
+2023-08-01T22:44:25.162+0800	[34mINFO[0m	routes/route.go:22	hello world
+2023-08-02T12:19:44.809+0800	[34mINFO[0m	usersvr/main.go:16	log init success
+2023-08-02T14:20:26.789+0800	[34mINFO[0m	usersvr/main.go:28	log init success
+2023-08-02T14:22:38.812+0800	[34mINFO[0m	usersvr/main.go:28	log init success
+2023-08-02T14:23:17.204+0800	[34mINFO[0m	usersvr/main.go:28	log init success
+2023-08-02T14:25:18.190+0800	[34mINFO[0m	usersvr/main.go:28	log init success
+2023-08-02T14:26:13.365+0800	[34mINFO[0m	usersvr/main.go:28	log init success
+2023-08-02T14:27:22.179+0800	[34mINFO[0m	usersvr/main.go:28	log init success
+2023-08-02T14:29:02.399+0800	[34mINFO[0m	usersvr/main.go:28	log init success
+2023-08-02T14:29:02.404+0800	[35mDEBUG[0m	usersvr/main.go:85	127.0.0.1%!(EXTRA int=8000)
+2023-08-02T14:31:13.503+0800	[34mINFO[0m	usersvr/main.go:28	log init success
+2023-08-02T14:31:13.507+0800	[35mDEBUG[0m	usersvr/main.go:85	8000
+2023-08-02T14:31:24.570+0800	[34mINFO[0m	usersvr/main.go:28	log init success
+2023-08-02T14:31:24.575+0800	[35mDEBUG[0m	usersvr/main.go:33	127.0.0.1%!(EXTRA int=8000)
+2023-08-02T14:31:24.635+0800	[34mINFO[0m	usersvr/main.go:56	Init Consul Register success
+2023-08-02T14:31:24.635+0800	[34mINFO[0m	usersvr/main.go:59	TikTokLite.usersvr listening on 127.0.0.1:8000
+2023-08-02T14:33:44.908+0800	[34mINFO[0m	usersvr/main.go:73	注销失败
+2023-08-02T14:33:44.909+0800	[31mERROR[0m	usersvr/main.go:87	Usersvr run err: 注销失败
+2023-08-02T14:47:27.191+0800	[34mINFO[0m	usersvr/main.go:28	log init success
+2023-08-02T14:47:27.433+0800	[34mINFO[0m	usersvr/main.go:56	Init Consul Register success
+2023-08-02T14:47:27.433+0800	[34mINFO[0m	usersvr/main.go:59	TikTokLite.usersvr listening on 127.0.0.1:8000
+2023-08-02T14:49:51.230+0800	[34mINFO[0m	usersvr/main.go:73	注销失败
+2023-08-02T14:49:51.231+0800	[31mERROR[0m	usersvr/main.go:87	Usersvr run err: 注销失败
+2023-08-02T15:05:23.188+0800	[34mINFO[0m	usersvr/main.go:28	log init success
+2023-08-02T15:05:23.198+0800	[34mINFO[0m	usersvr/main.go:56	Init Consul Register success
+2023-08-02T15:05:23.198+0800	[34mINFO[0m	usersvr/main.go:59	TikTokLite.usersvr listening on 127.0.0.1:8000
+2023-08-02T15:08:38.785+0800	[34mINFO[0m	usersvr/main.go:76	注销成功
+2023-08-02T15:08:47.809+0800	[34mINFO[0m	usersvr/main.go:28	log init success
+2023-08-02T15:08:47.818+0800	[34mINFO[0m	usersvr/main.go:56	Init Consul Register success
+2023-08-02T15:08:47.818+0800	[34mINFO[0m	usersvr/main.go:59	TikTokLite.usersvr listening on 127.0.0.1:8000
+2023-08-02T15:09:13.911+0800	[34mINFO[0m	usersvr/main.go:76	注销成功
+2023-08-02T15:23:33.640+0800	[34mINFO[0m	testsvr/main.go:28	log init success
+2023-08-02T15:23:33.650+0800	[34mINFO[0m	testsvr/main.go:56	Init Consul Register success
+2023-08-02T15:23:33.650+0800	[34mINFO[0m	testsvr/main.go:59	TikTokLite.usersvr listening on 127.0.0.1:8000
+2023-08-02T15:24:55.320+0800	[34mINFO[0m	testsvr/main.go:76	注销成功
+2023-08-02T15:24:58.936+0800	[34mINFO[0m	testsvr/main.go:28	log init success
+2023-08-02T15:24:58.946+0800	[34mINFO[0m	testsvr/main.go:56	Init Consul Register success
+2023-08-02T15:24:58.947+0800	[34mINFO[0m	testsvr/main.go:59	TikTokLite.usersvr listening on 127.0.0.1:8000
+2023-08-02T15:32:06.565+0800	[34mINFO[0m	testsvr/main.go:76	注销成功
+2023-08-02T15:35:36.651+0800	[34mINFO[0m	testsvr/main.go:29	log init success
+2023-08-02T15:35:36.660+0800	[34mINFO[0m	testsvr/main.go:57	Init Consul Register success
+2023-08-02T15:35:36.660+0800	[34mINFO[0m	testsvr/main.go:60	TikTokLite.usersvr listening on 117.72.16.121:8000
+2023-08-02T15:38:31.868+0800	[34mINFO[0m	testsvr/main.go:29	log init success
+2023-08-02T15:38:31.878+0800	[34mINFO[0m	testsvr/main.go:57	Init Consul Register success
+2023-08-02T15:38:31.879+0800	[34mINFO[0m	testsvr/main.go:60	TikTokLite.usersvr listening on 127.0.0.1:8000
+2023-08-02T15:47:00.948+0800	[34mINFO[0m	testsvr/main.go:77	注销成功
+2023-08-02T15:47:06.437+0800	[34mINFO[0m	testsvr/main.go:29	log init success
+2023-08-02T15:47:06.447+0800	[34mINFO[0m	testsvr/main.go:57	Init Consul Register success
+2023-08-02T15:47:06.447+0800	[34mINFO[0m	testsvr/main.go:60	TikTokLite.usersvr listening on 127.0.0.1:8000
+2023-08-02T15:53:04.872+0800	[34mINFO[0m	testsvr/main.go:77	注销成功
+2023-08-02T15:53:07.863+0800	[34mINFO[0m	testsvr/main.go:29	log init success
+2023-08-02T15:53:07.873+0800	[34mINFO[0m	testsvr/main.go:57	Init Consul Register success
+2023-08-02T15:53:07.873+0800	[34mINFO[0m	testsvr/main.go:60	TikTokLite.usersvr listening on 127.0.0.1:8000
+2023-08-02T15:56:25.893+0800	[34mINFO[0m	testsvr/main.go:77	注销成功
+2023-08-02T15:56:29.295+0800	[34mINFO[0m	testsvr/main.go:29	log init success
+2023-08-02T15:56:29.307+0800	[34mINFO[0m	testsvr/main.go:57	Init Consul Register success
+2023-08-02T15:56:29.307+0800	[34mINFO[0m	testsvr/main.go:60	TikTokLite.usersvr listening on 127.0.0.1:8000
+2023-08-02T16:02:49.907+0800	[34mINFO[0m	testsvr/main.go:77	注销成功

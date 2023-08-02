@@ -3,7 +3,7 @@ package config
 import (
 	"fmt"
 	"github.com/fsnotify/fsnotify"
-	"github.com/shixiaocaia/tiktok/cmd/gatewaysvr/log"
+	"github.com/shixiaocaia/tiktok/cmd/usersvr/log"
 	"github.com/spf13/viper"
 )
 
@@ -12,27 +12,18 @@ var globalConfig = new(GlobalConfig)
 type GlobalConfig struct {
 	*SvrConfig    `mapstructure:"svr_config"`
 	*ConsulConfig `mapstructure:"consul"`
-	Ping          string
 }
 
 type SvrConfig struct {
-	Name            string `mapstructure:"name"` // 服务name
-	Host            string `mapstructure:"host"` // 服务host
-	Port            int    `mapstructure:"port"`
-	Mode            string `mapstructure:"mode"`              // gin模式
-	UserSvrName     string `mapstructure:"user_svr_name"`     // 用户服务name
-	VideoSvrName    string `mapstructure:"video_svr_name"`    // 视频服务name
-	CommentSvrName  string `mapstructure:"comment_svr_name"`  // 评论服务name
-	RelationSvrName string `mapstructure:"relation_svr_name"` // 关系服务name
-	FavoriteSvrName string `mapstructure:"favorite_svr_name"` // 收藏服务name
-	VideoPath       string `mapstructure:"video_path"`        // 视频存放路径（有耦合，后面处理）
-	TestSvrName     string `mapstructure:"test_svr_name"`     // 测试服务name
+	Name string `mapstructure:"name"` // 服务name
+	Host string `mapstructure:"host"` // 服务host
+	Port int    `mapstructure:"port"` // 服务port
 }
 
 type ConsulConfig struct {
 	Host string   `mapstructure:"host"`
 	Port int      `mapstructure:"port"`
-	Tag  []string `mapstructure:"tag"`
+	Tags []string `mapstructure:"tag"`
 }
 
 // Init 初始化配置

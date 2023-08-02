@@ -3,24 +3,20 @@ package routes
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/shixiaocaia/tiktok/cmd/gatewaysvr/config"
-	"github.com/shixiaocaia/tiktok/cmd/gatewaysvr/log"
-	"net/http"
+	"github.com/shixiaocaia/tiktok/cmd/gatewaysvr/controller"
 )
 
 func SetRoute() *gin.Engine {
-	if config.GetGlobalConfig().Mode == gin.ReleaseMode {
+	if config.GetGlobalConfig().SvrConfig.Mode == gin.ReleaseMode {
+		// gin设置成发布模式：gin不在终端输出日志
 		gin.SetMode(gin.ReleaseMode)
 	} else {
 		gin.SetMode(gin.DebugMode)
 	}
 	r := gin.New()
 
-	r.GET("/ping", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{
-			"message": config.GetGlobalConfig().Ping,
-		})
-		log.Info(config.GetGlobalConfig().Ping)
-	})
+	r.GET("/ping", controller.Ping)
+	r.GET("/greet", controller.Greet)
 
 	//douyin := r.Group("/douyin/")
 	//{
