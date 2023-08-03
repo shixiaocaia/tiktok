@@ -1,0 +1,29 @@
+2023-07-29T16:03:19.443+0800	[34mINFO[0m	gatewaysvr/main.go:17	log init success
+2023-07-29T16:04:31.876+0800	[34mINFO[0m	gatewaysvr/main.go:17	log init success
+2023-07-29T16:04:35.810+0800	[34mINFO[0m	routes/route.go:16	pong
+2023-07-29T16:20:19.906+0800	[34mINFO[0m	gatewaysvr/main.go:17	log init success
+2023-07-29T16:20:32.693+0800	[34mINFO[0m	routes/route.go:16	pong
+2023-07-29T16:20:44.443+0800	[34mINFO[0m	routes/route.go:16	pong
+2023-07-29T16:22:28.210+0800	[34mINFO[0m	gatewaysvr/main.go:18	log init success
+2023-07-29T16:22:34.517+0800	[34mINFO[0m	routes/route.go:17	hello world
+2023-07-30T15:55:10.766+0800	[34mINFO[0m	gatewaysvr/main.go:18	log init success
+2023-07-30T15:55:22.403+0800	[34mINFO[0m	routes/route.go:17	hello world
+2023-07-30T16:27:24.494+0800	[34mINFO[0m	gatewaysvr/main.go:18	log init success
+2023-07-30T16:27:43.750+0800	[34mINFO[0m	routes/route.go:17	hello world
+2023-08-01T22:42:05.206+0800	[34mINFO[0m	gatewaysvr/main.go:19	log init success
+2023-08-01T22:44:25.162+0800	[34mINFO[0m	routes/route.go:22	hello world
+2023-08-02T19:29:27.304+0800	[34mINFO[0m	gatewaysvr/main.go:19	log init success
+2023-08-02T19:29:36.898+0800	[34mINFO[0m	gatewaysvr/main.go:19	log init success
+2023-08-02T19:29:56.526+0800	[34mINFO[0m	gatewaysvr/main.go:19	log init success
+2023-08-02T19:32:56.739+0800	[34mINFO[0m	gatewaysvr/main.go:19	log init success
+2023-08-02T19:33:21.614+0800	[34mINFO[0m	gatewaysvr/main.go:19	log init success
+2023-08-02T19:35:40.124+0800	[34mINFO[0m	gatewaysvr/main.go:16	log init success
+2023-08-02T19:37:27.645+0800	[34mINFO[0m	gatewaysvr/main.go:16	log init success
+2023-08-02T19:37:27.651+0800	[35mDEBUG[0m	gatewaysvr/main.go:25	dev
+2023-08-02T19:38:06.161+0800	[34mINFO[0m	gatewaysvr/main.go:19	log init success
+2023-08-02T19:38:42.418+0800	[34mINFO[0m	routes/route.go:23	hello world
+2023-08-02T19:41:50.677+0800	[34mINFO[0m	gatewaysvr/main.go:19	log init success
+2023-08-02T19:42:18.843+0800	[34mINFO[0m	gatewaysvr/main.go:19	log init success
+2023-08-02T19:45:10.555+0800	[34mINFO[0m	config/config.go:58	配置信息更新...
+2023-08-02T19:45:10.556+0800	[34mINFO[0m	config/config.go:58	配置信息更新...
+2023-08-02T19:55:50.076+0800	[34mINFO[0m	gatewaysvr/main.go:19	log init success

@@ -1,0 +1,63 @@
+syntax = "proto3";
+
+option go_package = "../pb;pb";
+import "common.proto";
+// 这里有多个--proto_path是因为当前proto文件中有import别的proto文件，在构建的时候这些proto文件要从--proto_path指定的多个路径去找，
+// 一个没找到就回去从另一个招
+// protoc --proto_path=../../../user/proto/ --proto_path=. --go_out=. ./*.proto
+
+// 关注关系方法
+message RelationActionReq {
+  int64 self_user_id = 1;
+  int64 to_user_id = 2;
+  int64 action_type = 3;
+}
+
+message RelationActionRsp {
+  CommonResponse common_rsp = 1;
+}
+
+message GetRelationFollowListReq {
+  int64 user_id = 1;
+}
+
+message GetRelationFollowListRsp {
+  repeated int64 follow_list = 1; // 关注我关注的人
+}
+
+message GetRelationFollowerListReq {
+  int64 user_id = 1;
+}
+
+message GetRelationFollowerListRsp {
+  repeated int64 follower_list = 1; // 喜欢我的人
+}
+
+
+message FollowUint {
+  int64 self_user_id = 1; // 自己的id
+  int64 user_id_list = 2; // 对方的id列表
+}
+
+message IsFollowDictReq {
+  repeated FollowUint follow_uint_list = 1; // 关注字典
+}
+
+message IsFollowDictRsp {
+  map<string, bool> is_follow_dict = 1; // 是否关注字典
+}
+
+
+service RelationService {
+  rpc RelationAction(RelationActionReq) returns (RelationActionRsp); // 关联关系方法
+  rpc GetRelationFollowList(GetRelationFollowListReq) returns (GetRelationFollowListRsp); // 获取被关注者列表
+  rpc GetRelationFollowerList(GetRelationFollowerListReq) returns (GetRelationFollowerListRsp); // 获取关注者列表
+  rpc IsFollowDict(IsFollowDictReq) returns (IsFollowDictRsp); // 获取是否关注
+}
+
+
+
+
+
+
+

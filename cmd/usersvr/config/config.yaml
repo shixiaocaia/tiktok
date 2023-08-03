@@ -1,0 +1,32 @@
+svr_config:
+  port: 8000
+  name: "usersvr"
+  host: "117.72.16.121"
+
+
+log:
+  level: "debug"
+  file_name: "usersvr.log"
+  log_path: "../../log/usersvr/"
+  max_size: 200
+  max_age: 30
+  max_backups: 7
+
+
+consul:
+    host: "117.72.16.121"
+    port: 8500
+    tags:
+      - "usersvr"
+
+mysql:
+    username: "root"
+    password: "123456"
+    host: "117.72.16.121"
+    port: "8086"
+    database: "camps_tiktok"
+    max_idle_conn: 10
+    max_open_conn: 100
+    max_idle_time: 3600
+
+
