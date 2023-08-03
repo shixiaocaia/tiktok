@@ -3,7 +3,6 @@ package config
 import (
 	"fmt"
 	"github.com/fsnotify/fsnotify"
-	"github.com/shixiaocaia/tiktok/cmd/gatewaysvr/log"
 	"github.com/spf13/viper"
 )
 
@@ -12,6 +11,7 @@ var globalConfig = new(GlobalConfig)
 type GlobalConfig struct {
 	*SvrConfig    `mapstructure:"svr_config"`
 	*ConsulConfig `mapstructure:"consul"`
+	*LogConfig    `mapstructure:"log"`
 	Ping          string
 }
 
@@ -27,6 +27,15 @@ type SvrConfig struct {
 	FavoriteSvrName string `mapstructure:"favorite_svr_name"` // 收藏服务name
 	VideoPath       string `mapstructure:"video_path"`        // 视频存放路径（有耦合，后面处理）
 	TestSvrName     string `mapstructure:"test_svr_name"`     // 测试服务name
+}
+
+type LogConfig struct {
+	Level      string `mapstructure:"level"`
+	FileName   string `mapstructure:"file_name"`
+	LogPath    string `mapstructure:"log_path"`
+	MaxSize    int    `mapstructure:"max_size"`
+	MaxAge     int    `mapstructure:"max_age"`
+	MaxBackUps int    `mapstructure:"max_backups"`
 }
 
 type ConsulConfig struct {
@@ -49,14 +58,14 @@ func Init() (err error) {
 	}
 	// 将读取的配置信息保存至全局变量Conf
 	if err := viper.Unmarshal(globalConfig); err != nil {
-		log.Error("viper.ReadInConfig() failed")
+		fmt.Println("viper.ReadInConfig() failed")
 		panic(fmt.Errorf("unmarshal conf failed, err:%s \n", err))
 	}
 	// 监控配置文件变化
 	viper.WatchConfig()
 	// 注意！！！配置文件发生变化后要同步到全局变量Conf
 	viper.OnConfigChange(func(in fsnotify.Event) {
-		log.Info("配置信息更新...")
+		fmt.Println("配置信息更新...")
 		if err := viper.Unmarshal(globalConfig); err != nil {
 			panic(fmt.Errorf("unmarshal conf failed, err:%s \n", err))
 		}

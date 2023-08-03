@@ -1,6 +1,7 @@
 package log
 
 import (
+	"github.com/shixiaocaia/tiktok/cmd/gatewaysvr/config"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 	"gopkg.in/natefinch/lumberjack.v2"
@@ -20,26 +21,39 @@ func InitLogger() {
 	// encoderConfig.EncodeCaller = zapcore.FullCallerEncoder        //显示完整文件路径
 	encoder := zapcore.NewConsoleEncoder(encoderConfig)
 
+	// 日志级别
+	highPriority := zap.LevelEnablerFunc(func(lev zapcore.Level) bool { // error级别
+		return lev >= zap.ErrorLevel
+	})
+	lowPriority := zap.LevelEnablerFunc(func(lev zapcore.Level) bool { // info和debug级别,debug级别是最低的
+		if config.GetGlobalConfig().LogConfig.Level == "debug" {
+			return lev < zap.ErrorLevel && lev >= zap.DebugLevel
+		} else {
+			return lev < zap.ErrorLevel && lev >= zap.InfoLevel
+		}
+	})
+
 	// test.log记录全量日志
+	logConfig := config.GetGlobalConfig().LogConfig
 	logF := &lumberjack.Logger{
-		Filename:   "./log/test.log",
-		MaxSize:    200,
-		MaxBackups: 7,
-		MaxAge:     30,
+		Filename:   logConfig.LogPath + "info_" + logConfig.FileName,
+		MaxSize:    logConfig.MaxSize,
+		MaxBackups: logConfig.MaxBackUps,
+		MaxAge:     logConfig.MaxAge,
 		Compress:   false,
 	}
-	c1 := zapcore.NewCore(encoder, zapcore.AddSync(logF), zapcore.DebugLevel)
+	c1 := zapcore.NewCore(encoder, zapcore.AddSync(logF), lowPriority)
 
 	// test.err.log记录ERROR级别的日志
 	errF := &lumberjack.Logger{
-		Filename:   "./log/test.err.log",
-		MaxSize:    200,
-		MaxBackups: 7,
-		MaxAge:     30,
+		Filename:   logConfig.LogPath + "err_" + logConfig.FileName,
+		MaxSize:    logConfig.MaxSize,
+		MaxBackups: logConfig.MaxBackUps,
+		MaxAge:     logConfig.MaxAge,
 		Compress:   false,
 	}
 
-	c2 := zapcore.NewCore(encoder, zapcore.AddSync(errF), zap.ErrorLevel)
+	c2 := zapcore.NewCore(encoder, zapcore.AddSync(errF), highPriority)
 	c3 := zapcore.NewCore(encoder, zapcore.NewMultiWriteSyncer(zapcore.AddSync(os.Stdout)), zapcore.DebugLevel)
 	// 使用NewTee将c1和c2合并到core
 	core := zapcore.NewTee(c1, c2, c3)

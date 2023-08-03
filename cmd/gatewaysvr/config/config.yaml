@@ -11,6 +11,15 @@ svr_config:
   comment_svr_name: "commentsvr"
   test_svr_name: "testsvr"
 
+
+log:
+  level: "debug"
+  file_name: "gatewaysvr.log"
+  log_path: "../../log/gatawaysvr/"
+  max_size: 200
+  max_age: 30
+  max_backups: 7
+
 consul:
     host: "117.72.16.121"
     port: 8500

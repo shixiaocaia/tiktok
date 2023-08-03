@@ -15,14 +15,15 @@ func SetRoute() *gin.Engine {
 	}
 	r := gin.New()
 
+	// test
 	r.GET("/ping", controller.Ping)
 	r.GET("/greet", controller.Greet)
 
-	//douyin := r.Group("/douyin/")
-	//{
-	//
-	//	douyin.GET("/feed/", controller.Feed)
-	//}
+	douyin := r.Group("/douyin/")
+	{
+		UserRoutes(douyin)
+
+	}
 
 	return r
 }

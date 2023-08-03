@@ -5,8 +5,8 @@ import (
 	uuid "github.com/satori/go.uuid"
 	"github.com/shixiaocaia/tiktok/cmd/usersvr/config"
 	"github.com/shixiaocaia/tiktok/cmd/usersvr/log"
+	"github.com/shixiaocaia/tiktok/cmd/usersvr/middleware/consul"
 	"github.com/shixiaocaia/tiktok/cmd/usersvr/service"
-	"github.com/shixiaocaia/tiktok/cmd/usersvr/utils/consul"
 	"github.com/shixiaocaia/tiktok/pkg/pb"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/health"
@@ -83,6 +83,10 @@ func main() {
 	defer log.Sync()
 
 	//log.Debugf("%v", config.GetGlobalConfig().SvrConfig.Port)
+	//if dao.GetDB() == nil {
+	//	log.Errorf("get DB failed")
+	//}
+
 	if err := Run(); err != nil {
 		log.Errorf("Usersvr run err: %v", err)
 	}

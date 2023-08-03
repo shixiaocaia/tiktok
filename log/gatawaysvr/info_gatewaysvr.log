@@ -1,0 +1,2 @@
+2023-08-03T10:00:29.179+0800	[34mINFO[0m	gatewaysvr/main.go:20	log init success
+2023-08-03T10:00:29.185+0800	[34mINFO[0m	utils/utils.go:45	NewSvrConn success

@@ -1,4 +1,4 @@
-2023-07-29T16:03:19.443+0800	[34mINFO[0m	gatewaysvr/main.go:17	log init success
+023-07-29T16:03:19.443+0800	[34mINFO[0m	gatewaysvr/main.go:17	log init success
 2023-07-29T16:04:31.876+0800	[34mINFO[0m	gatewaysvr/main.go:17	log init success
 2023-07-29T16:04:35.810+0800	[34mINFO[0m	routes/route.go:16	pong
 2023-07-29T16:20:19.906+0800	[34mINFO[0m	gatewaysvr/main.go:17	log init success

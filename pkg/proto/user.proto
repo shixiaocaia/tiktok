@@ -126,8 +126,10 @@ message RegisterRequest {
 }
 
 message RegisterResponse {
-  int64 user_id = 1;
-  string token = 2;
+  int32 status_code = 1;
+  string status_msg = 2;
+  int64 user_id = 3;
+  string token = 4;
 }
 // ******
 
