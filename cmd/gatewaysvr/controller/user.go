@@ -2,10 +2,10 @@ package controller
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/shixiaocaia/tiktok/cmd/gatewaysvr/constant"
 	"github.com/shixiaocaia/tiktok/cmd/gatewaysvr/log"
 	"github.com/shixiaocaia/tiktok/cmd/gatewaysvr/response"
 	"github.com/shixiaocaia/tiktok/cmd/gatewaysvr/utils"
-	"github.com/shixiaocaia/tiktok/cmd/usersvr/constant"
 	"github.com/shixiaocaia/tiktok/pkg/pb"
 	"strconv"
 )
@@ -15,7 +15,7 @@ func UserLogin(ctx *gin.Context) {
 	passWord := ctx.Query("password")
 
 	if len(userName) > 32 || len(passWord) > 32 {
-		response.Fail(ctx, "username or password invalid", nil)
+		response.Fail(ctx, constant.InvalidUserInfo, nil)
 		return
 	}
 
@@ -29,7 +29,7 @@ func UserLogin(ctx *gin.Context) {
 		response.Fail(ctx, err.Error(), nil)
 		return
 	}
-	log.Info("login success")
+	log.Info("login success...")
 	response.Success(ctx, "success", resp)
 }
 
@@ -40,7 +40,7 @@ func UserRegister(ctx *gin.Context) {
 
 	// 用户名和密码最长32个字符
 	if len(userName) > 32 || len(passWord) > 32 {
-		response.Fail(ctx, "username or password invalid", nil)
+		response.Fail(ctx, constant.InvalidUserInfo, nil)
 		return
 	}
 
@@ -55,7 +55,7 @@ func UserRegister(ctx *gin.Context) {
 		response.Fail(ctx, err.Error(), nil)
 		return
 	}
-	log.Info("register success")
+	log.Info("UserRegister success")
 	response.Success(ctx, "success", resp)
 }
 
@@ -64,15 +64,16 @@ func GetUserInfo(ctx *gin.Context) {
 	uids, _ := ctx.Get("UserID")
 
 	if uids == nil {
-		log.Error("no uids")
-		response.Fail(ctx, "no uids", nil)
+		log.Error("cannot get uids from ctx")
+		response.Fail(ctx, constant.ErrorToken, nil)
 		return
 	}
 
 	uid := uids.(int64)
 
 	if strconv.FormatInt(uid, 10) != userId {
-		response.Fail(ctx, "token error", nil)
+		log.Error("invalid uid")
+		response.Fail(ctx, constant.ErrorToken, nil)
 		return
 	}
 
@@ -86,6 +87,6 @@ func GetUserInfo(ctx *gin.Context) {
 		response.Fail(ctx, constant.ErrorToken, nil)
 		return
 	}
-	log.Info("getUserinfo success")
+	log.Info("getUserinfo success...")
 	response.Success(ctx, "success", resp)
 }
