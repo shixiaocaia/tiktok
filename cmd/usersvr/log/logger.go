@@ -13,7 +13,9 @@ import (
 var sugarLogger *zap.SugaredLogger
 var logger *zap.Logger
 
-func InitLogger() {
+func InitLog() {
+	var coreArr []zapcore.Core
+
 	// 获取编码器
 	encoderConfig := zap.NewProductionEncoderConfig()            // NewJSONEncoder()输出json格式，NewConsoleEncoder()输出普通文本格式
 	encoderConfig.EncodeTime = zapcore.ISO8601TimeEncoder        // 指定时间格式
@@ -32,34 +34,29 @@ func InitLogger() {
 			return lev < zap.ErrorLevel && lev >= zap.InfoLevel
 		}
 	})
-
-	// test.log记录全量日志
+	// info文件writeSyncer
 	logConfig := config.GetGlobalConfig().LogConfig
-	logF := &lumberjack.Logger{
-		Filename:   logConfig.LogPath + "info_" + logConfig.FileName,
-		MaxSize:    logConfig.MaxSize,
-		MaxBackups: logConfig.MaxBackUps,
-		MaxAge:     logConfig.MaxAge,
-		Compress:   false,
-	}
-	c1 := zapcore.NewCore(encoder, zapcore.AddSync(logF), lowPriority)
+	infoFileWriteSyncer := zapcore.AddSync(&lumberjack.Logger{
+		Filename:   logConfig.LogPath + "info_" + logConfig.FileName, // 日志文件存放目录，
+		MaxSize:    logConfig.MaxSize,                                // 文件大小限制,单位MB
+		MaxBackups: logConfig.MaxBackups,                             // 最大保留日志文件数量
+		MaxAge:     logConfig.MaxAge,                                 // 日志文件保留天数
+		Compress:   false,                                            // 是否压缩处理
+	})
+	infoFileCore := zapcore.NewCore(encoder, zapcore.NewMultiWriteSyncer(infoFileWriteSyncer, zapcore.AddSync(os.Stdout)), lowPriority)
+	// error文件writeSyncer
+	errorFileWriteSyncer := zapcore.AddSync(&lumberjack.Logger{
+		Filename:   logConfig.LogPath + "error_" + logConfig.FileName, // 日志文件存放目录
+		MaxSize:    logConfig.MaxSize,                                 // 文件大小限制,单位MB
+		MaxBackups: logConfig.MaxBackups,                              // 最大保留日志文件数量
+		MaxAge:     logConfig.MaxAge,                                  // 日志文件保留天数
+		Compress:   false,                                             // 是否压缩处理
+	})
+	errorFileCore := zapcore.NewCore(encoder, zapcore.NewMultiWriteSyncer(errorFileWriteSyncer, zapcore.AddSync(os.Stdout)), highPriority)
 
-	// test.err.log记录ERROR级别的日志
-	errF := &lumberjack.Logger{
-		Filename:   logConfig.LogPath + "err_" + logConfig.FileName,
-		MaxSize:    logConfig.MaxSize,
-		MaxBackups: logConfig.MaxBackUps,
-		MaxAge:     logConfig.MaxAge,
-		Compress:   false,
-	}
-
-	c2 := zapcore.NewCore(encoder, zapcore.AddSync(errF), highPriority)
-	c3 := zapcore.NewCore(encoder, zapcore.NewMultiWriteSyncer(zapcore.AddSync(os.Stdout)), zapcore.DebugLevel)
-	// 使用NewTee将c1和c2合并到core
-	core := zapcore.NewTee(c1, c2, c3)
-
-	// 调用者详细信息, 间接调用log
-	logger = zap.New(core, zap.AddCaller(), zap.AddCallerSkip(1))
+	coreArr = append(coreArr, infoFileCore)
+	coreArr = append(coreArr, errorFileCore)
+	logger = zap.New(zapcore.NewTee(coreArr...), zap.AddCaller(), zap.AddCallerSkip(1)) // zap.AddCaller()为显示文件名和行号，可省略
 	sugarLogger = logger.Sugar()
 }
 

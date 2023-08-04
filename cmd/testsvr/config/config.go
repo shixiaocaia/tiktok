@@ -3,7 +3,7 @@ package config
 import (
 	"fmt"
 	"github.com/fsnotify/fsnotify"
-	"github.com/shixiaocaia/tiktok/cmd/usersvr/log"
+	"github.com/shixiaocaia/tiktok/cmd/testsvr/log"
 	"github.com/spf13/viper"
 )
 

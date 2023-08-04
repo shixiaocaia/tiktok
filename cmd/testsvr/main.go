@@ -84,6 +84,10 @@ func main() {
 	Init()
 	defer log.Sync()
 
+	log.Infof("testInfo: %v", "hava a try")
+	log.Debugf("testDebug: %v", "hava a try")
+	log.Errorf("testError: %v", "hava a try")
+
 	//log.Debugf("%v", config.GetGlobalConfig().SvrConfig.Port)
 	if err := Run(); err != nil {
 		log.Errorf("Usersvr run err: %v", err)

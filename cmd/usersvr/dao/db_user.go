@@ -1,8 +1,10 @@
 package dao
 
 import (
+	"errors"
+	"github.com/shixiaocaia/tiktok/cmd/gatewaysvr/log"
+	"github.com/shixiaocaia/tiktok/cmd/usersvr/constant"
 	"github.com/shixiaocaia/tiktok/model"
-	"go.uber.org/zap"
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 )
@@ -40,9 +42,28 @@ func InsertUser(username, password string) (*model.User, error) {
 	if result.Error != nil {
 		return nil, result.Error
 	}
-	zap.L().Info("create user", zap.Any("user", user))
+	log.Infof("create user: %v", user)
 
 	// todo redis缓存
 
 	return &user, nil
+}
+
+func GetUserInfo(u interface{}) (model.User, error) {
+	db := GetDB()
+	user := model.User{}
+	var err error
+
+	switch u := u.(type) {
+	case int64:
+		err = db.Where("id = ?", u).First(&user).Error
+	case string:
+		err = db.Where("user_name = ?", u).First(&user).Error
+	default:
+		err = errors.New(constant.ErrorUserInfo)
+	}
+	if err != nil {
+		return user, err
+	}
+	return user, nil
 }

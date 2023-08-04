@@ -45,7 +45,7 @@ func openDB() {
 	// 最大可复用时间
 	sqlDB.SetConnMaxLifetime(time.Duration(dbConfig.MaxIdleTime))
 
-	log.Info("mysql init success")
+	log.Info("connect to mysql...")
 }
 
 // GetDB 获取db

@@ -1,7 +1,7 @@
 syntax = "proto3";
 
 option go_package = "../pb;pb";
-// protoc --proto_path=. --go_out=. ./*.proto
+// protoc --go_out=. user.proto
 // protoc -I . user.proto  --go_out=plugins=grpc:.
 
 import "common.proto";
@@ -114,8 +114,10 @@ message CheckPassWordRequest {
 }
 
 message CheckPassWordResponse {
-  int64 user_id = 2;
-  string  token = 3;
+  int32 status_code = 1;
+  string status_msg = 2;
+  int64 user_id = 3;
+  string  token = 4;
 }
 // ******
 

@@ -33,7 +33,7 @@ type LogConfig struct {
 	LogPath    string `mapstructure:"log_path"`
 	MaxSize    int    `mapstructure:"max_size"`
 	MaxAge     int    `mapstructure:"max_age"`
-	MaxBackUps int    `mapstructure:"max_backups"`
+	MaxBackups int    `mapstructure:"max_backups"`
 }
 
 type MySQLConfig struct {
