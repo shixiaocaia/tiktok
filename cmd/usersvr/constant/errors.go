@@ -3,7 +3,8 @@ package constant
 const (
 	UserNameIsExist = "username exists"
 	ErrorPassword   = "password error"
-	ErrorUserInfo   = "error userinfo"
+	ErrorUserInfo   = "userinfo error"
+	ErrorToken      = "token error"
 )
 
 const (

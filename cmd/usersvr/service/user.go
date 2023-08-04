@@ -4,23 +4,14 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"github.com/golang-jwt/jwt/v4"
 	"github.com/shixiaocaia/tiktok/cmd/usersvr/constant"
 	"github.com/shixiaocaia/tiktok/cmd/usersvr/dao"
 	"github.com/shixiaocaia/tiktok/cmd/usersvr/log"
+	jwtoken "github.com/shixiaocaia/tiktok/cmd/usersvr/middleware/jwt"
+	"github.com/shixiaocaia/tiktok/model"
 	"github.com/shixiaocaia/tiktok/pkg/pb"
 	"golang.org/x/crypto/bcrypt"
 )
-
-// JWT 签名密钥，定义JWT中存放usrname和userID
-
-var mySigningKey = []byte("mini_tiktok")
-
-type JWTClaims struct {
-	Username string `json:"user_name"`
-	UserID   int64  `json:"user_id"`
-	jwt.RegisteredClaims
-}
 
 type UserService struct {
 	pb.UnimplementedUserServiceServer
@@ -45,7 +36,7 @@ func (u UserService) Register(ctx context.Context, req *pb.RegisterRequest) (*pb
 		return nil, err
 	}
 	// 生成token
-	token, err := GenToken(info.Id, req.Username)
+	token, err := jwtoken.GenToken(info.Id, req.Username)
 	if err != nil {
 		return nil, err
 	}
@@ -71,7 +62,7 @@ func (u UserService) CheckPassWord(ctx context.Context, req *pb.CheckPassWordReq
 		return nil, errors.New(constant.ErrorPassword)
 	}
 	// 生成token,后续验证
-	token, err := GenToken(info.Id, info.Name)
+	token, err := jwtoken.GenToken(info.Id, info.Name)
 	if err != nil {
 
 		return nil, err
@@ -85,20 +76,31 @@ func (u UserService) CheckPassWord(ctx context.Context, req *pb.CheckPassWordReq
 
 }
 
-func GenToken(userid int64, username string) (string, error) {
-	claims := &JWTClaims{
-		Username: username,
-		UserID:   userid,
-		RegisteredClaims: jwt.RegisteredClaims{
-			//ExpiresAt: jwt.NewNumericDate(time.Now().Add(TokenExpireDuration)),
-			// 方便测试，不设置过期时间
-			Issuer: "server",
-		},
-	}
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	signedToken, err := token.SignedString(mySigningKey)
+func (u UserService) GetUserInfo(ctx context.Context, req *pb.GetUserInfoRequest) (*pb.GetUserInfoResponse, error) {
+	info, err := dao.GetUserInfo(req.UserId)
 	if err != nil {
-		return "", err
+		log.Error(constant.ErrorUserInfo)
+		return nil, err
 	}
-	return signedToken, nil
+	response := &pb.GetUserInfoResponse{
+		User: UserToUserInfo(info),
+	}
+	log.Info("getUserinfo success...")
+	return response, nil
+}
+
+func UserToUserInfo(info model.User) *pb.UserInfo {
+	return &pb.UserInfo{
+		Id:              info.Id,
+		Name:            info.Name,
+		FollowCount:     info.Follow,
+		FollowerCount:   info.Follower,
+		IsFollow:        false,
+		Avatar:          info.Avatar,
+		BackgroundImage: info.BackgroundImage,
+		Signature:       info.Signature,
+		TotalFavorited:  info.TotalFav,
+		FavoriteCount:   info.FavCount,
+		WorkCount:       info.WorkCount,
+	}
 }

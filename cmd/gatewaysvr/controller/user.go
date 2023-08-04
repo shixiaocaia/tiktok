@@ -5,7 +5,9 @@ import (
 	"github.com/shixiaocaia/tiktok/cmd/gatewaysvr/log"
 	"github.com/shixiaocaia/tiktok/cmd/gatewaysvr/response"
 	"github.com/shixiaocaia/tiktok/cmd/gatewaysvr/utils"
+	"github.com/shixiaocaia/tiktok/cmd/usersvr/constant"
 	"github.com/shixiaocaia/tiktok/pkg/pb"
+	"strconv"
 )
 
 func UserLogin(ctx *gin.Context) {
@@ -58,5 +60,32 @@ func UserRegister(ctx *gin.Context) {
 }
 
 func GetUserInfo(ctx *gin.Context) {
+	userId := ctx.Query("user_id")
+	uids, _ := ctx.Get("UserID")
 
+	if uids == nil {
+		log.Error("no uids")
+		response.Fail(ctx, "no uids", nil)
+		return
+	}
+
+	uid := uids.(int64)
+
+	if strconv.FormatInt(uid, 10) != userId {
+		response.Fail(ctx, "token error", nil)
+		return
+	}
+
+	// 根据userID获取用户信息
+	resp, err := utils.GetUserSvrClient().GetUserInfo(ctx, &pb.GetUserInfoRequest{
+		UserId: uid,
+	})
+
+	if err != nil {
+		log.Error("GetUserInfo failed ", err)
+		response.Fail(ctx, constant.ErrorToken, nil)
+		return
+	}
+	log.Info("getUserinfo success")
+	response.Success(ctx, "success", resp)
 }
