@@ -36,7 +36,7 @@ message GetRelationFollowerListRsp {
 
 message FollowUint {
   int64 self_user_id = 1; // 自己的id
-  int64 user_id_list = 2; // 对方的id列表
+  int64 to_user_id = 2; // 对方的id列表
 }
 
 message IsFollowDictReq {

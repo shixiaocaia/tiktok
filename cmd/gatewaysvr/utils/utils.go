@@ -14,8 +14,9 @@ import (
 )
 
 var (
-	UserSvrClient pb.UserServiceClient
 	GreeterClient pb.GreeterClient
+	UserSvrClient pb.UserServiceClient
+	VideoClient   pb.VideoServiceClient
 )
 
 func GetCurrentTime() int64 {
@@ -23,8 +24,9 @@ func GetCurrentTime() int64 {
 }
 
 func InitSvrConn() {
-	UserSvrClient = NewUserSvrClient(config.GetGlobalConfig().SvrConfig.UserSvrName)
 	//GreeterClient = NewGreeterClient(config.GetGlobalConfig().SvrConfig.TestSvrName)
+	UserSvrClient = NewUserSvrClient(config.GetGlobalConfig().SvrConfig.UserSvrName)
+	VideoClient = NewVideoClient(config.GetGlobalConfig().SvrConfig.VideoSvrName)
 }
 
 func NewSvrConn(svrName string) (*grpc.ClientConn, error) {
@@ -54,6 +56,10 @@ func GetUserSvrClient() pb.UserServiceClient {
 	return UserSvrClient
 }
 
+func GetVideoSvrClient() pb.VideoServiceClient {
+	return VideoClient
+}
+
 func NewUserSvrClient(svrName string) pb.UserServiceClient {
 	conn, err := NewSvrConn(svrName)
 	if err != nil {
@@ -68,4 +74,12 @@ func NewGreeterClient(svrName string) pb.GreeterClient {
 		return nil
 	}
 	return pb.NewGreeterClient(conn)
+}
+
+func NewVideoClient(svrName string) pb.VideoServiceClient {
+	conn, err := NewSvrConn(svrName)
+	if err != nil {
+		return nil
+	}
+	return pb.NewVideoServiceClient(conn)
 }

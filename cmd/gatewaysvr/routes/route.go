@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/shixiaocaia/tiktok/cmd/gatewaysvr/config"
 	"github.com/shixiaocaia/tiktok/cmd/gatewaysvr/controller"
+	jwtoken "github.com/shixiaocaia/tiktok/cmd/gatewaysvr/middleware"
 )
 
 func SetRoute() *gin.Engine {
@@ -22,7 +23,8 @@ func SetRoute() *gin.Engine {
 	douyin := r.Group("/douyin/")
 	{
 		UserRoutes(douyin)
-
+		PublishVideoRoutes(douyin)
+		douyin.GET("/feed/", jwtoken.JWTWithoutAuthMiddleware(), controller.Feed)
 	}
 
 	return r

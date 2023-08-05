@@ -89,7 +89,45 @@ func (u UserService) GetUserInfo(ctx context.Context, req *pb.GetUserInfoRequest
 	return response, nil
 }
 
+func (u UserService) GetUserInfoDict(ctx context.Context, req *pb.GetUserInfoDictRequest) (*pb.GetUserInfoDictResponse, error) {
+	userIdList := req.UserIdList
+	log.Debugf("userIdList ", userIdList)
+	// 应该获取用户ID，一次性查询而不是单个查询，效率低
+	userList, err := dao.GetUserListInfo(userIdList)
+	if err != nil {
+		log.Error("GetUserListInfo failed...")
+		return nil, err
+	}
+	log.Debugf("userList: %v", userList)
+	response := &pb.GetUserInfoDictResponse{UserInfoDict: make(map[int64]*pb.UserInfo)}
+
+	for _, user := range userList {
+		response.UserInfoDict[user.Id] = UserToUserInfo2(user)
+	}
+	log.Info("GetUserInfoDict success...")
+	return response, nil
+
+}
+
+// UserToUserInfo 类型转换
 func UserToUserInfo(info model.User) *pb.UserInfo {
+	return &pb.UserInfo{
+		Id:              info.Id,
+		Name:            info.Name,
+		FollowCount:     info.Follow,
+		FollowerCount:   info.Follower,
+		IsFollow:        false,
+		Avatar:          info.Avatar,
+		BackgroundImage: info.BackgroundImage,
+		Signature:       info.Signature,
+		TotalFavorited:  info.TotalFav,
+		FavoriteCount:   info.FavCount,
+		WorkCount:       info.WorkCount,
+	}
+}
+
+// UserToUserInfo2 类型转换(区别上面指针）
+func UserToUserInfo2(info *model.User) *pb.UserInfo {
 	return &pb.UserInfo{
 		Id:              info.Id,
 		Name:            info.Name,

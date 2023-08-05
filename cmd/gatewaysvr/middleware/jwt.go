@@ -72,3 +72,20 @@ func JWTAuthMiddleware() gin.HandlerFunc {
 		c.Next()
 	}
 }
+
+// JWTWithoutAuthMiddleware feed 针对登录和未登录采取不同的措施
+func JWTWithoutAuthMiddleware() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		tokenString := c.Query("token")
+
+		userID, err := VerifyToken(tokenString)
+		if err != nil {
+			log.Error("token error")
+			response.Fail(c, "auth error", nil)
+			c.Abort()
+		}
+		// token 为空，传入0
+		c.Set("UserID", userID)
+		c.Next()
+	}
+}

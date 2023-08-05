@@ -68,3 +68,14 @@ func GetUserInfo(u interface{}) (model.User, error) {
 	}
 	return user, nil
 }
+
+func GetUserListInfo(userIdList []int64) ([]*model.User, error) {
+	db := GetDB()
+	var users []*model.User
+	log.Debugf("userIdList: %v", userIdList)
+	err := db.Where("id in ?", userIdList).Find(&users).Error
+	if err != nil && err != gorm.ErrRecordNotFound {
+		return nil, err
+	}
+	return users, nil
+}
