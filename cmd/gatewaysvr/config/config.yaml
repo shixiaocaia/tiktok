@@ -4,6 +4,7 @@ svr_config:
   port: 8005
   mode: "dev"
   host: "117.72.16.121"
+  video_path: "/root/tiktok/video"
   user_svr_name: "usersvr"
   video_svr_name: "videosvr"
   favorite_svr_name: "favoritesvr"

@@ -54,16 +54,14 @@ func VerifyToken(token string) (int64, error) {
 // JWTAuthMiddleware 基于JWT的认证中间件
 func JWTAuthMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		tokenString := c.Query("token")
+		tokenString := c.PostForm("token")
 		if tokenString == "" {
-			log.Error("without token")
-			response.Fail(c, "without token", nil)
-			c.Abort()
+			tokenString = c.Query("token")
 		}
 
 		userID, err := VerifyToken(tokenString)
 		if err != nil || userID == int64(0) {
-			log.Error("token error")
+			log.Error("token error...")
 			response.Fail(c, "auth error", nil)
 			c.Abort()
 		}
@@ -76,11 +74,14 @@ func JWTAuthMiddleware() gin.HandlerFunc {
 // JWTWithoutAuthMiddleware feed 针对登录和未登录采取不同的措施
 func JWTWithoutAuthMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		tokenString := c.Query("token")
+		tokenString := c.PostForm("token")
+		if tokenString == "" {
+			tokenString = c.Query("token")
+		}
 
 		userID, err := VerifyToken(tokenString)
 		if err != nil {
-			log.Error("token error")
+			log.Error("token error...")
 			response.Fail(c, "auth error", nil)
 			c.Abort()
 		}

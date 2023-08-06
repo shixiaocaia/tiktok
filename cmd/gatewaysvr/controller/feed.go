@@ -30,7 +30,7 @@ func Feed(ctx *gin.Context) {
 		LatestTime: currentTime,
 		UserId:     UserID,
 	})
-	// todo 视频顺序按照发布时间倒叙
+	log.Debugf("VideoList: %v", feedListResponse.VideoList)
 
 	var authorIdList = make([]int64, 0)
 	var followUintList = make([]*pb.FollowUint, 0)

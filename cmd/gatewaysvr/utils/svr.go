@@ -19,10 +19,6 @@ var (
 	VideoClient   pb.VideoServiceClient
 )
 
-func GetCurrentTime() int64 {
-	return time.Now().UnixNano() / 1e6
-}
-
 func InitSvrConn() {
 	//GreeterClient = NewGreeterClient(config.GetGlobalConfig().SvrConfig.TestSvrName)
 	UserSvrClient = NewUserSvrClient(config.GetGlobalConfig().SvrConfig.UserSvrName)
