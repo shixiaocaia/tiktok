@@ -116,7 +116,7 @@ func (u VideoService) GetPublishVideoList(ctx context.Context, req *pb.GetPublis
 
 // GetVideoInfoList 获取视频作者信息
 func (u VideoService) GetVideoInfoList(ctx context.Context, req *pb.GetVideoInfoListReq) (*pb.GetVideoInfoListRsp, error) {
-	videolist, err := dao.GetVideoListByVideoIdList(req.VideoId)
+	videoList, err := dao.GetVideoListByVideoIdList(req.VideoId)
 	if err != nil {
 		log.Errorf("GetVideoListByVideoIdList failed...")
 		return nil, err
@@ -125,7 +125,7 @@ func (u VideoService) GetVideoInfoList(ctx context.Context, req *pb.GetVideoInfo
 	rsp := &pb.GetVideoInfoListRsp{
 		VideoInfoList: make([]*pb.VideoInfo, 0),
 	}
-	for _, video := range videolist {
+	for _, video := range videoList {
 		rsp.VideoInfoList = append(rsp.VideoInfoList, &pb.VideoInfo{
 			Id:            video.Id,
 			AuthorId:      video.AuthorId,

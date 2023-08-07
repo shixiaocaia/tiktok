@@ -34,3 +34,35 @@ func DislikeAction(userID, videoID int64) error {
 	log.Infof("Dislike video: %v", videoID)
 	return nil
 }
+
+func IsFavoriteVideo(uid, vid int64) (bool, error) {
+	db := GetDB()
+	err := db.Where("user_id = ? and video_id = ?", uid, vid).First(&model.Favorite{}).Error
+	if err != nil {
+		// 没有找到记录说明不是点赞视频
+		if err == gorm.ErrRecordNotFound {
+			return false, nil
+		}
+		return false, err
+	}
+	return true, nil
+}
+
+func GetFavoriteVideoIdList(uid int64) ([]int64, error) {
+	db := GetDB()
+	var favoriteList []*model.Favorite
+	err := db.Model(&model.Favorite{}).Where("user_id = ?", uid).Find(&favoriteList).Error
+	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return []int64{}, nil
+		}
+		return nil, err
+	}
+
+	videoIdList := make([]int64, 0)
+	for _, video := range favoriteList {
+		videoIdList = append(videoIdList, video.VideoId)
+	}
+
+	return videoIdList, nil
+}

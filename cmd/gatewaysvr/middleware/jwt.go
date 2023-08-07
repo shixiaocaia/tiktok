@@ -8,7 +8,7 @@ import (
 	"github.com/shixiaocaia/tiktok/cmd/gatewaysvr/response"
 )
 
-// JWT 签名密钥，定义JWT中存放usrname和userID
+// JWT 签名密钥，定义JWT中存放username和userID
 
 var mySigningKey = []byte("mini_tiktok")
 
@@ -55,6 +55,7 @@ func VerifyToken(token string) (int64, error) {
 func JWTAuthMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		tokenString := c.PostForm("token")
+		//log.Debugf("Request: %v", c.Request)
 		if tokenString == "" {
 			tokenString = c.Query("token")
 		}
@@ -79,14 +80,19 @@ func JWTWithoutAuthMiddleware() gin.HandlerFunc {
 			tokenString = c.Query("token")
 		}
 
-		userID, err := VerifyToken(tokenString)
-		if err != nil {
-			log.Error("token error...")
-			response.Fail(c, "auth error", nil)
-			c.Abort()
+		if tokenString == "" {
+			log.Info("not loginUser...")
+			c.Set("UserID", int64(-1))
+			c.Next()
+		} else {
+			userID, err := VerifyToken(tokenString)
+			if err != nil {
+				log.Error("token error...")
+				response.Fail(c, "auth error", nil)
+				c.Abort()
+			}
+			c.Set("UserID", userID)
+			c.Next()
 		}
-		// token 为空，传入0
-		c.Set("UserID", userID)
-		c.Next()
 	}
 }

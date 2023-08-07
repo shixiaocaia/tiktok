@@ -11,7 +11,7 @@ import (
 func GetVideoListByFeed(time int64) ([]model.Video, error) {
 	var videos []model.Video
 	db := GetDB()
-	err := db.Where("publish_time < ?", time).Limit(20).Order("publish_time DESC").Find(&videos).Error
+	err := db.Where("publish_time < ?", time).Limit(30).Order("publish_time DESC").Find(&videos).Error
 	if err != nil && err != gorm.ErrRecordNotFound {
 		log.Error("can not find videos...")
 		return videos, err
@@ -55,6 +55,7 @@ func GetVideoListByAuthorID(authorId int64) ([]model.Video, error) {
 	return videos, nil
 }
 
+// GetVideoListByVideoIdList 获取用户发布的多个视频
 func GetVideoListByVideoIdList(videoId []int64) ([]model.Video, error) {
 	var videos []model.Video
 	db := GetDB()

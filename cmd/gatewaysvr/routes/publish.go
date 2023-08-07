@@ -8,10 +8,10 @@ import (
 
 func PublishVideoRoutes(r *gin.RouterGroup) {
 	// JWT
-	publish := r.Group("publish", jwtoken.JWTAuthMiddleware())
+	publish := r.Group("publish")
 	{
-		publish.POST("/action/", controller.PublishAction)
-		publish.GET("/list/", controller.GetPublishList)
+		publish.POST("/action/", jwtoken.JWTAuthMiddleware(), controller.PublishAction)
+		publish.GET("/list/", jwtoken.JWTWithoutAuthMiddleware(), controller.GetPublishList)
 	}
 
 }

@@ -7,9 +7,9 @@ import (
 )
 
 func FavoriteRoutes(r *gin.RouterGroup) {
-	favorite := r.Group("/favorite/", jwtoken.JWTAuthMiddleware())
+	favorite := r.Group("/favorite/")
 	{
-		favorite.POST("/action/", controller.FavoriteAction)
-		favorite.GET("/list/", controller.FavoriteList)
+		favorite.POST("/action/", jwtoken.JWTAuthMiddleware(), controller.FavoriteAction)
+		favorite.GET("/list/", jwtoken.JWTWithoutAuthMiddleware(), controller.FavoriteList)
 	}
 }

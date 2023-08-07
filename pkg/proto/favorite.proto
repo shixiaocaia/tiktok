@@ -2,6 +2,7 @@ syntax = "proto3";
 
 option go_package = "../pb;pb";
 
+import "video.proto";
 // protoc --go_out=. favorite.proto
 // 关注关系方法
 message FavoriteActionReq {
@@ -20,7 +21,9 @@ message GetFavoriteVideoIdListReq {
 }
 
 message GetFavoriteVideoIdListRsp {
-  repeated int64 video_id_list = 1; // 关注者用户信息列表
+  int32 status_code = 1;
+  string status_msg = 2;
+  repeated int64 video_id_list = 3; // 关注者用户信息列表
 }
 
 
@@ -36,6 +39,12 @@ message IsFavoriteVideoDictReq {
 
 message IsFavoriteVideoDictRsp {
   map<string, bool> is_favorite_dict = 1;
+}
+
+message FavoriteVideoListRsp{
+  int32 status_code = 1;
+  string status_msg = 2;
+  repeated  Video video_list = 3;
 }
 // **********************
 

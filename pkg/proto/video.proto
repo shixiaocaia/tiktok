@@ -12,7 +12,7 @@ service VideoService {
   rpc GetFeedList(GetFeedListRequest) returns (GetFeedListResponse);
   rpc GetPublishVideoList(GetPublishVideoListRequest) returns (GetPublishVideoListResponse);
   rpc PublishVideo(PublishVideoRequest) returns (PublishVideoResponse);
-
+  // 根据视频id，获取视频信息
   rpc GetVideoInfoList(GetVideoInfoListReq) returns (GetVideoInfoListRsp);
   rpc GetFavoriteVideoList(GetFavoriteVideoListReq) returns (GetFavoriteVideoListRsp);
   // 更新这个视频的获赞数

@@ -2,6 +2,7 @@ package controller
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/shixiaocaia/tiktok/cmd/gatewaysvr/constant"
 	"github.com/shixiaocaia/tiktok/cmd/gatewaysvr/log"
 	"github.com/shixiaocaia/tiktok/cmd/gatewaysvr/response"
 	"github.com/shixiaocaia/tiktok/cmd/gatewaysvr/utils"
@@ -14,6 +15,7 @@ type FavActionParams struct {
 	ActionType int64 `form:"action_type" binding:"required,oneof=1 2"`
 }
 
+// FavoriteAction 点赞/取消赞
 func FavoriteAction(ctx *gin.Context) {
 	var favInfo FavActionParams
 	err := ctx.ShouldBindQuery(&favInfo)
@@ -84,6 +86,77 @@ func FavoriteAction(ctx *gin.Context) {
 	response.Success(ctx, "success", nil)
 }
 
+// FavoriteList 用户喜欢的视频
 func FavoriteList(ctx *gin.Context) {
+	userID, _ := ctx.Get("UserID")
+	if userID == int64(-1) {
+		log.Infof("login in first...")
+		response.Fail(ctx, constant.ErrorNotLogin, nil)
+		return
+	}
 
+	// 1. 根据userID,查favorite表中的videoIdlist
+	favoriteVideoIdListRsp, err := utils.GetFavoriteSvrClient().GetFavoriteVideoIdList(ctx, &pb.GetFavoriteVideoIdListReq{
+		UserId: userID.(int64),
+	})
+	if err != nil {
+		log.Errorf("GetFavoriteVideoIdList failed: %v", err)
+		response.Fail(ctx, err.Error(), nil)
+		return
+	}
+	// 2. 根据videoId查询视频信息
+	authorIdListRsp, err := utils.GetVideoSvrClient().GetVideoInfoList(ctx, &pb.GetVideoInfoListReq{
+		VideoId: favoriteVideoIdListRsp.VideoIdList,
+	})
+	if err != nil {
+		log.Errorf("GetVideoInfoList failed: %v", err)
+		response.Fail(ctx, err.Error(), nil)
+		return
+	}
+	var authorIdList []int64
+	for _, v := range authorIdListRsp.VideoInfoList {
+		authorIdList = append(authorIdList, v.AuthorId)
+	}
+
+	// 3.查询视频作者的信息
+	videoAuthorInfoRep, err := utils.GetUserSvrClient().GetUserInfoDict(ctx, &pb.GetUserInfoDictRequest{
+		UserIdList: authorIdList,
+	})
+	if err != nil {
+		log.Errorf("GetVideoAuthorInfo failed: %v", err)
+		response.Fail(ctx, err.Error(), nil)
+		return
+	}
+	userMap := videoAuthorInfoRep.UserInfoDict
+	// 4. 填充响应
+	var rsp = &pb.FavoriteVideoListRsp{
+		VideoList: make([]*pb.Video, 0),
+	}
+
+	for _, v := range authorIdListRsp.VideoInfoList {
+		rsp.VideoList = append(rsp.VideoList, &pb.Video{
+			Id:            v.Id,
+			PlayUrl:       v.PlayUrl,
+			CoverUrl:      v.CoverUrl,
+			FavoriteCount: v.FavoriteCount,
+			CommentCount:  v.CommentCount,
+			IsFavorite:    v.IsFavorite,
+			Title:         v.Title,
+			Author: &pb.UserInfo{
+				Id:              v.AuthorId,
+				Name:            userMap[v.AuthorId].Name,
+				Avatar:          userMap[v.AuthorId].Avatar,
+				FollowCount:     userMap[v.AuthorId].FollowCount,
+				FollowerCount:   userMap[v.AuthorId].FollowerCount,
+				IsFollow:        userMap[v.AuthorId].IsFollow,
+				BackgroundImage: userMap[v.AuthorId].BackgroundImage,
+				Signature:       userMap[v.AuthorId].Signature,
+				TotalFavorited:  userMap[v.AuthorId].TotalFavorited,
+				FavoriteCount:   userMap[v.AuthorId].FavoriteCount,
+			},
+		})
+	}
+
+	log.Infof("get user: %v favoriteList", userID)
+	response.Success(ctx, "success", rsp)
 }

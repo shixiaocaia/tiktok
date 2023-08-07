@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/shixiaocaia/tiktok/cmd/gatewaysvr/config"
+	"github.com/shixiaocaia/tiktok/cmd/gatewaysvr/constant"
 	"github.com/shixiaocaia/tiktok/cmd/gatewaysvr/log"
 	"github.com/shixiaocaia/tiktok/cmd/gatewaysvr/response"
 	"github.com/shixiaocaia/tiktok/cmd/gatewaysvr/utils"
@@ -62,14 +63,16 @@ func PublishAction(ctx *gin.Context) {
 
 // GetPublishList 发布列表
 func GetPublishList(ctx *gin.Context) {
-	tokenUserId, _ := ctx.Get("UserID")
-	//id := ctx.Query("user_id")
-	log.Debugf("tokenUserId: %v", tokenUserId)
+	UserID, _ := ctx.Get("UserID")
+	if UserID == int64(-1) {
+		log.Infof("login in first...")
+		response.Fail(ctx, constant.ErrorNotLogin, nil)
+		return
+	}
 	// 获取视频
 	getPublishList, err := utils.GetVideoSvrClient().GetPublishVideoList(ctx, &pb.GetPublishVideoListRequest{
-		UserId: tokenUserId.(int64),
+		UserId: UserID.(int64),
 	})
-	log.Debugf("getPublishList: %v", getPublishList)
 	if err != nil {
 		log.Errorf("GetPublishVideoList failed: %v", err)
 		response.Fail(ctx, err.Error(), nil)
@@ -78,7 +81,7 @@ func GetPublishList(ctx *gin.Context) {
 
 	// 获取作者信息
 	getUserInfo, err := utils.GetUserSvrClient().GetUserInfo(ctx, &pb.GetUserInfoRequest{
-		UserId: tokenUserId.(int64),
+		UserId: UserID.(int64),
 	})
 
 	if err != nil {
@@ -91,7 +94,7 @@ func GetPublishList(ctx *gin.Context) {
 		video.Author = getUserInfo.User
 	}
 
-	log.Debugf("getPublishList: %v", getPublishList)
+	log.Infof("get author: %v videos", UserID)
 	response.Success(ctx, "success", getPublishList)
 
 }

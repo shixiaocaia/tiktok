@@ -1,7 +1,6 @@
 package controller
 
 import (
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/shixiaocaia/tiktok/cmd/gatewaysvr/log"
 	"github.com/shixiaocaia/tiktok/cmd/gatewaysvr/response"
@@ -12,25 +11,21 @@ import (
 
 // Feed 视频流
 func Feed(ctx *gin.Context) {
-	// 从URL中读取时间戳转换为int64
+	// 1. 获取时间戳，判断有无token，从token提取用户ID
 	currentTime, err := strconv.ParseInt(ctx.Query("latest_time"), 10, 64)
 	if err != nil || currentTime == int64(0) {
 		currentTime = utils.GetCurrentTime()
 	}
-
-	// todo 根据token验证当前是登录状态还是未登录状态
-	// 如果是登录要显示视频的参数，是否点赞，是否关注等状态
+	// 1-1. 未登录用户，从ctx读到-1，区分登录还是未登录
 	userID, _ := ctx.Get("UserID")
-	var UserID int64
-	UserID = userID.(int64)
-	// 未登录用户 UserID = 0
+	UserID := userID.(int64)
 
-	// 调用rpc请求获取多个视频
+	// 2. 获取一组视频以及相关信息
+	// 2-1根据时间戳拿到一组视频
 	feedListResponse, err := utils.GetVideoSvrClient().GetFeedList(ctx, &pb.GetFeedListRequest{
 		LatestTime: currentTime,
 		UserId:     UserID,
 	})
-	log.Debugf("VideoList: %v", feedListResponse.VideoList)
 
 	var authorIdList = make([]int64, 0)
 	var followUintList = make([]*pb.FollowUint, 0)
@@ -50,21 +45,29 @@ func Feed(ctx *gin.Context) {
 			VideoId: video.Id,
 		})
 	}
-	// 根据视频的作者id，去查作者信息
+	// 2-2根据视频的作者id，去查作者信息
 	videoAuthorInfoRep, err := utils.GetUserSvrClient().GetUserInfoDict(ctx, &pb.GetUserInfoDictRequest{
 		UserIdList: authorIdList,
 	})
 	if err != nil {
-		log.Error("GetVideoAuthorInfo err...", err)
-		response.Fail(ctx, fmt.Sprintf("GetUserSvrClient GetUserInfoDict err %v", err.Error()), nil)
+		log.Errorf("GetVideoAuthorInfo failed: %v", err)
+		response.Fail(ctx, err.Error(), nil)
 		return
 	}
-	// log.Debugf("videoAuthorInfo: ", videoAuthorInfoRep.UserInfoDict)
 
-	// todo 视频点赞
-
-	// todo 关注用户
-
+	// 2-3 登录用户，判断视频是否点赞
+	var videoFavoriteListRep *pb.IsFavoriteVideoDictRsp
+	if UserID != -1 {
+		videoFavoriteListRep, err = utils.GetFavoriteSvrClient().IsFavoriteVideoDict(ctx, &pb.IsFavoriteVideoDictReq{
+			FavoriteUnitList: favoriteUnitList,
+		})
+		if err != nil {
+			log.Errorf("IsFavoriteVideoDict failed: %v", err)
+			response.Fail(ctx, err.Error(), nil)
+			return
+		}
+	}
+	// todo 2-4 登录用户，判断视频作者是否关注
 	// 填充响应返回
 	var resp = &pb.DouyinFeedResponse{
 		VideoList: make([]*pb.Video, 0),
@@ -77,14 +80,14 @@ func Feed(ctx *gin.Context) {
 			CoverUrl:      video.CoverUrl,
 			FavoriteCount: video.FavoriteCount,
 			CommentCount:  video.CommentCount,
-			IsFavorite:    video.IsFavorite,
 			Title:         video.Title,
 		}
 		// 作者详细信息
 		videoRep.Author = videoAuthorInfoRep.UserInfoDict[video.AuthorId]
 		// 登录用户，更新点赞和关注信息
-		if UserID != 0 {
-
+		if UserID != -1 {
+			var favoriteUint = strconv.FormatInt(UserID, 10) + "_" + strconv.FormatInt(videoRep.Id, 10)
+			videoRep.IsFavorite = videoFavoriteListRep.IsFavoriteDict[favoriteUint]
 		}
 		resp.VideoList = append(resp.VideoList, videoRep)
 	}
