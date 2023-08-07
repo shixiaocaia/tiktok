@@ -1,11 +1,8 @@
 syntax = "proto3";
 
 option go_package = "../pb;pb";
-import "common.proto";
-// 这里有多个--proto_path是因为当前proto文件中有import别的proto文件，在构建的时候这些proto文件要从--proto_path指定的多个路径去找，
-// 一个没找到就回去从另一个招
-// protoc --proto_path=../../../user/proto/ --proto_path=. --go_out=. ./*.proto
 
+// protoc --go_out=. favorite.proto
 // 关注关系方法
 message FavoriteActionReq {
   int64 user_id = 1;
@@ -14,7 +11,8 @@ message FavoriteActionReq {
 }
 
 message FavoriteActionRsp {
-  CommonResponse common_rsp = 1;
+  int32 status_code = 1;
+  string status_msg = 2;
 }
 
 message GetFavoriteVideoIdListReq {
@@ -22,7 +20,7 @@ message GetFavoriteVideoIdListReq {
 }
 
 message GetFavoriteVideoIdListRsp {
-  repeated int64 video_id_list = 1; // 关注z者用户信息列表
+  repeated int64 video_id_list = 1; // 关注者用户信息列表
 }
 
 

@@ -14,12 +14,9 @@ import (
 // PublishAction 发布视频
 func PublishAction(ctx *gin.Context) {
 	// JWT鉴权后获得userid
-	utils.GetRequestInfo(ctx)
 	userID, _ := ctx.Get("UserID")
 	title := ctx.PostForm("title")
 	data, err := ctx.FormFile("data")
-
-	log.Debugf("userID: %v, title: %v", userID, title)
 
 	if err != nil {
 		log.Errorf("upload video failed: %v", err)
@@ -34,9 +31,8 @@ func PublishAction(ctx *gin.Context) {
 	videoPath := config.GetGlobalConfig().VideoPath
 	saveFile := filepath.Join(videoPath, finalName)
 
-	log.Debugf("videoPath:%v", videoPath)
-
 	if err := ctx.SaveUploadedFile(data, saveFile); err != nil {
+		log.Errorf("UploadVideo failed: %v", err)
 		response.Fail(ctx, err.Error(), nil)
 		return
 	}
@@ -52,6 +48,15 @@ func PublishAction(ctx *gin.Context) {
 		response.Fail(ctx, err.Error(), nil)
 		return
 	}
+	_, err = utils.GetUserSvrClient().UpdateWorkCount(ctx, &pb.UpdateUserWorkCountReq{
+		UserId: userID.(int64),
+	})
+	if err != nil {
+		log.Errorf("UpdateWorkCount failed: %v", err)
+		response.Fail(ctx, err.Error(), nil)
+		return
+	}
+
 	response.Success(ctx, "success", &pb.PublishVideoResponse{})
 }
 

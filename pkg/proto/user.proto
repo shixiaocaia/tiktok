@@ -2,7 +2,7 @@ syntax = "proto3";
 
 option go_package = "../pb;pb";
 // protoc --go_out=. user.proto
-// protoc -I . user.proto  --go_out=plugins=grpc:.
+// protoc --go-grpc_out=. user.proto
 
 import "common.proto";
 
@@ -20,9 +20,10 @@ service UserService {
   rpc UpdateUserFavoriteCount(UpdateUserFavoriteCountReq) returns (UpdateUserFavoriteCountRsp);
   // 更新我的关注数
   rpc UpdateUserFollowCount(UpdateUserFollowCountReq) returns (UpdateUserFollowCountRsp);
-
   // 更新我的粉丝数
   rpc UpdateUserFollowerCount(UpdateUserFollowerCountReq) returns (UpdateUserFollowerCountRsp);
+  // 更新我的作品数
+  rpc UpdateWorkCount(UpdateUserWorkCountReq) returns (UpdateUserWorkCountRsp);
 }
 
 // UpdateUserFollowCount
@@ -70,6 +71,13 @@ message UpdateUserFavoriteCountRsp {
 }
 // ******
 
+message UpdateUserWorkCountReq {
+  int64 user_id = 1;
+}
+
+message UpdateUserWorkCountRsp {
+  CommonResponse common_rsp = 1;
+}
 
 // ******
 message GetUserInfoDictRequest {
@@ -148,6 +156,7 @@ message GetUserInfoListResponse {
   repeated UserInfo user_info_list = 1;
 }
 // ******
+
 
 // ******
 message CacheChangeUserCountReq {

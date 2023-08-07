@@ -41,6 +41,7 @@ func InsertVideo(authorID int64, playUrl, picUrl, title string) error {
 
 }
 
+// GetVideoListByAuthorID 根据authorID获取视频
 func GetVideoListByAuthorID(authorId int64) ([]model.Video, error) {
 	var videos []model.Video
 
@@ -51,5 +52,15 @@ func GetVideoListByAuthorID(authorId int64) ([]model.Video, error) {
 		return nil, err
 	}
 	log.Debugf("videos: %v", videos)
+	return videos, nil
+}
+
+func GetVideoListByVideoIdList(videoId []int64) ([]model.Video, error) {
+	var videos []model.Video
+	db := GetDB()
+	err := db.Where("id in ?", videoId).Find(&videos).Error
+	if err != nil && err != gorm.ErrRecordNotFound {
+		return videos, err
+	}
 	return videos, nil
 }

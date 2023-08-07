@@ -53,14 +53,14 @@ func (u VideoService) GetFeedList(ctx context.Context, req *pb.GetFeedListReques
 // PublishVideo 上传视频
 func (u VideoService) PublishVideo(ctx context.Context, req *pb.PublishVideoRequest) (*pb.PublishVideoResponse, error) {
 	// 连接到minio
+	startTime := time.Now()
 	client := minio.GetMinio()
 	playUrl, err := client.UploadFile("video", req.SaveFile, strconv.FormatInt(req.UserId, 10))
 	if err != nil {
 		log.Errorf("Minio UploadFile err: %v", err)
 		return nil, err
 	}
-
-	log.Infof("save file: %v", req.SaveFile)
+	log.Infof("save file: %v, cost %v", req.SaveFile, time.Since(startTime))
 
 	// 生成视频封面
 	imageFile, err := utils.GetImageFile(req.SaveFile)
@@ -68,12 +68,15 @@ func (u VideoService) PublishVideo(ctx context.Context, req *pb.PublishVideoRequ
 		log.Errorf("ffmpeg getVideoPic failed: %v", err)
 		return nil, err
 	}
+	log.Infof("GetImageFile cost %v", time.Since(startTime))
 
+	// 上传封面
 	coverUrl, err := client.UploadFile("pic", imageFile, strconv.FormatInt(req.UserId, 10))
 	if err != nil {
 		log.Errorf("minio upLoadPic failed: %v", err)
 		return nil, err
 	}
+	log.Infof("UpImageFile cost %v", time.Since(startTime))
 
 	log.Debugf("title: %v", req.Title)
 	err = dao.InsertVideo(req.UserId, playUrl, coverUrl, req.Title)
@@ -81,9 +84,12 @@ func (u VideoService) PublishVideo(ctx context.Context, req *pb.PublishVideoRequ
 		log.Errorf("InsertVideo failed: %v", err)
 		return nil, err
 	}
+	// todo 更新author视频数
+
 	return &pb.PublishVideoResponse{}, nil
 }
 
+// GetPublishVideoList 获得上传视频列表
 func (u VideoService) GetPublishVideoList(ctx context.Context, req *pb.GetPublishVideoListRequest) (*pb.GetPublishVideoListResponse, error) {
 	videos, err := dao.GetVideoListByAuthorID(req.UserId)
 	if err != nil {
@@ -106,4 +112,30 @@ func (u VideoService) GetPublishVideoList(ctx context.Context, req *pb.GetPublis
 		VideoList: videoList,
 	}
 	return resp, nil
+}
+
+// GetVideoInfoList 获取视频作者信息
+func (u VideoService) GetVideoInfoList(ctx context.Context, req *pb.GetVideoInfoListReq) (*pb.GetVideoInfoListRsp, error) {
+	videolist, err := dao.GetVideoListByVideoIdList(req.VideoId)
+	if err != nil {
+		log.Errorf("GetVideoListByVideoIdList failed...")
+		return nil, err
+	}
+
+	rsp := &pb.GetVideoInfoListRsp{
+		VideoInfoList: make([]*pb.VideoInfo, 0),
+	}
+	for _, video := range videolist {
+		rsp.VideoInfoList = append(rsp.VideoInfoList, &pb.VideoInfo{
+			Id:            video.Id,
+			AuthorId:      video.AuthorId,
+			PlayUrl:       video.PlayUrl,
+			CoverUrl:      video.CoverUrl,
+			FavoriteCount: video.FavoriteCount,
+			CommentCount:  video.CommentCount,
+			IsFavorite:    false,
+			Title:         video.Title,
+		})
+	}
+	return rsp, nil
 }

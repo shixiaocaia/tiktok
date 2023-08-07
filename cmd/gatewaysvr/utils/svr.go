@@ -14,15 +14,15 @@ import (
 )
 
 var (
-	GreeterClient pb.GreeterClient
-	UserSvrClient pb.UserServiceClient
-	VideoClient   pb.VideoServiceClient
+	UserSvrClient  pb.UserServiceClient
+	VideoClient    pb.VideoServiceClient
+	FavoriteClient pb.FavoriteServiceClient
 )
 
 func InitSvrConn() {
-	//GreeterClient = NewGreeterClient(config.GetGlobalConfig().SvrConfig.TestSvrName)
 	UserSvrClient = NewUserSvrClient(config.GetGlobalConfig().SvrConfig.UserSvrName)
 	VideoClient = NewVideoClient(config.GetGlobalConfig().SvrConfig.VideoSvrName)
+	FavoriteClient = NewFavoriteClient(config.GetGlobalConfig().SvrConfig.FavoriteSvrName)
 }
 
 func NewSvrConn(svrName string) (*grpc.ClientConn, error) {
@@ -44,16 +44,16 @@ func NewSvrConn(svrName string) (*grpc.ClientConn, error) {
 	return conn, nil
 }
 
-func GetGreeterClient() pb.GreeterClient {
-	return GreeterClient
-}
-
 func GetUserSvrClient() pb.UserServiceClient {
 	return UserSvrClient
 }
 
 func GetVideoSvrClient() pb.VideoServiceClient {
 	return VideoClient
+}
+
+func GetFavoriteSvrClient() pb.FavoriteServiceClient {
+	return FavoriteClient
 }
 
 func NewUserSvrClient(svrName string) pb.UserServiceClient {
@@ -78,4 +78,12 @@ func NewVideoClient(svrName string) pb.VideoServiceClient {
 		return nil
 	}
 	return pb.NewVideoServiceClient(conn)
+}
+
+func NewFavoriteClient(svrName string) pb.FavoriteServiceClient {
+	conn, err := NewSvrConn(svrName)
+	if err != nil {
+		return nil
+	}
+	return pb.NewFavoriteServiceClient(conn)
 }

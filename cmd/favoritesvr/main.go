@@ -3,15 +3,15 @@ package main
 import (
 	"fmt"
 	uuid "github.com/satori/go.uuid"
-	"github.com/shixiaocaia/tiktok/cmd/testsvr/config"
-	"github.com/shixiaocaia/tiktok/cmd/testsvr/log"
-	"github.com/shixiaocaia/tiktok/cmd/testsvr/service"
-	"github.com/shixiaocaia/tiktok/cmd/testsvr/utils/consul"
+	"github.com/shixiaocaia/tiktok/cmd/favoritesvr/config"
+	"github.com/shixiaocaia/tiktok/cmd/favoritesvr/constant"
+	"github.com/shixiaocaia/tiktok/cmd/favoritesvr/log"
+	"github.com/shixiaocaia/tiktok/cmd/favoritesvr/middleware/consul"
+	"github.com/shixiaocaia/tiktok/cmd/favoritesvr/service"
 	"github.com/shixiaocaia/tiktok/pkg/pb"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/health"
 	"google.golang.org/grpc/health/grpc_health_v1"
-	_ "google.golang.org/grpc/health/grpc_health_v1"
 	"net"
 	"os"
 	"os/signal"
@@ -21,18 +21,16 @@ import (
 func Init() {
 	// 读取配置
 	if err := config.Init(); err != nil {
-
-		log.Fatalf("init config failed, err:%v\n", err)
+		log.Fatalf("init favoriteSvr config failed, err:%v\n", err)
 	}
 	// 初始化日志
-	log.InitLogger()
+	log.InitLog()
 
-	log.Info("log init success")
+	log.Info("log init success...")
 
 }
 
 func Run() error {
-	//log.Debugf(config.GetGlobalConfig().SvrConfig.Host, config.GetGlobalConfig().SvrConfig.Port)
 	listen, err := net.Listen("tcp", fmt.Sprintf("%s:%d", "", config.GetGlobalConfig().SvrConfig.Port))
 	if err != nil {
 		log.Fatalf("listen error: %v", err)
@@ -42,7 +40,7 @@ func Run() error {
 	// 启动grpc server
 	server := grpc.NewServer()
 	// 注册grpc server
-	pb.RegisterGreeterServer(server, &service.GreetService{})
+	pb.RegisterFavoriteServiceServer(server, &service.FavoriteService{})
 	// 注册服务健康检查
 	grpc_health_v1.RegisterHealthServer(server, health.NewServer())
 
@@ -53,12 +51,12 @@ func Run() error {
 	if err := consulClient.Register(config.GetGlobalConfig().SvrConfig.Host, config.GetGlobalConfig().SvrConfig.Port,
 		config.GetGlobalConfig().Name, config.GetGlobalConfig().ConsulConfig.Tags, serviceID); err != nil {
 		log.Fatal("consul.Register error: ", err)
-		return fmt.Errorf("consul.Register error: ", err)
+		return fmt.Errorf(constant.ConsulRegister)
 	}
-	log.Info("Init Consul Register success")
+	log.Info("Init Consul Register success...")
 
 	// 启动
-	log.Infof("TikTokLite.usersvr listening on %s:%d", config.GetGlobalConfig().SvrConfig.Host, config.GetGlobalConfig().SvrConfig.Port)
+	log.Infof("TikTokLite.favoriteSvr listening on %s:%d", config.GetGlobalConfig().SvrConfig.Host, config.GetGlobalConfig().SvrConfig.Port)
 	go func() {
 		err = server.Serve(listen)
 		if err != nil {
@@ -84,12 +82,7 @@ func main() {
 	Init()
 	defer log.Sync()
 
-	log.Infof("testInfo: %v", "hava a try")
-	log.Debugf("testDebug: %v", "hava a try")
-	log.Errorf("testError: %v", "hava a try")
-
-	//log.Debugf("%v", config.GetGlobalConfig().SvrConfig.Port)
 	if err := Run(); err != nil {
-		log.Errorf("Usersvr run err: %v", err)
+		log.Errorf("favoriteSvr run err: %v", err)
 	}
 }

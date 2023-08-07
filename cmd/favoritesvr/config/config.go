@@ -3,7 +3,6 @@ package config
 import (
 	"fmt"
 	"github.com/fsnotify/fsnotify"
-	"github.com/shixiaocaia/tiktok/cmd/testsvr/log"
 	"github.com/spf13/viper"
 )
 
@@ -12,6 +11,9 @@ var globalConfig = new(GlobalConfig)
 type GlobalConfig struct {
 	*SvrConfig    `mapstructure:"svr_config"`
 	*ConsulConfig `mapstructure:"consul"`
+	*LogConfig    `mapstructure:"log"`
+	*MySQLConfig  `mapstructure:"mysql"`
+	*MinioConfig  `mapstructure:"minio"`
 }
 
 type SvrConfig struct {
@@ -24,6 +26,39 @@ type ConsulConfig struct {
 	Host string   `mapstructure:"host"`
 	Port int      `mapstructure:"port"`
 	Tags []string `mapstructure:"tag"`
+}
+
+type LogConfig struct {
+	Level      string `mapstructure:"level"`
+	FileName   string `mapstructure:"file_name"`
+	LogPath    string `mapstructure:"log_path"`
+	MaxSize    int    `mapstructure:"max_size"`
+	MaxAge     int    `mapstructure:"max_age"`
+	MaxBackups int    `mapstructure:"max_backups"`
+}
+
+type MySQLConfig struct {
+	Host        string `mapstructure:"host"`
+	Port        string `mapstructure:"port"`
+	DataBase    string `mapstructure:"database"`
+	UserName    string `mapstructure:"username"`
+	PassWord    string `mapstructure:"password"`
+	MaxIdleConn int    `mapstructure:"max_idle_conn"` // 最大空闲连接数
+	MaxOpenConn int    `mapstructure:"max_open_conn"` // 最大打开的连接数
+	MaxIdleTime int64  `mapstructure:"max_idle_time"` // 连接最大空闲时间
+
+}
+
+type MinioConfig struct {
+	Host            string `mapstructure:"host"`
+	Port            string `mapstructure:"port"`
+	AccessKeyID     string `mapstructure:"access_key_id"`
+	SecretAccessKey string `mapstructure:"secret_access_key"`
+	VideoBuckets    string `mapstructure:"video_buckets"`
+	PicBuckets      string `mapstructure:"pic_buckets"`
+	VideoPath       string `mapstructure:"video_path"`
+	// LogFile   string `mapstructure:"logfile"`
+	PicPath string `mapstructure:"pic_path"`
 }
 
 // Init 初始化配置
@@ -40,14 +75,14 @@ func Init() (err error) {
 	}
 	// 将读取的配置信息保存至全局变量Conf
 	if err := viper.Unmarshal(globalConfig); err != nil {
-		log.Error("viper.ReadInConfig() failed")
+		fmt.Println("viper.ReadInConfig() failed")
 		panic(fmt.Errorf("unmarshal conf failed, err:%s \n", err))
 	}
 	// 监控配置文件变化
 	viper.WatchConfig()
 	// 注意！！！配置文件发生变化后要同步到全局变量Conf
 	viper.OnConfigChange(func(in fsnotify.Event) {
-		log.Info("配置信息更新...")
+		fmt.Println("配置信息更新...")
 		if err := viper.Unmarshal(globalConfig); err != nil {
 			panic(fmt.Errorf("unmarshal conf failed, err:%s \n", err))
 		}

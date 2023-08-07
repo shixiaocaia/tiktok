@@ -17,15 +17,15 @@ func SetRoute() *gin.Engine {
 	r := gin.New()
 
 	// test
-	r.GET("/ping", controller.Ping)
-	r.GET("/greet", controller.Greet)
+	//r.GET("/ping", controller.Ping)
+	//r.GET("/greet", controller.Greet)
 
 	douyin := r.Group("/douyin/")
 	{
 		UserRoutes(douyin)
 		PublishVideoRoutes(douyin)
+		FavoriteRoutes(douyin)
 		douyin.GET("/feed/", jwtoken.JWTWithoutAuthMiddleware(), controller.Feed)
 	}
-
 	return r
 }
