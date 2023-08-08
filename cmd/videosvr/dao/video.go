@@ -65,3 +65,18 @@ func GetVideoListByVideoIdList(videoId []int64) ([]model.Video, error) {
 	}
 	return videos, nil
 }
+
+// UpdateCommentCount 更新评论数
+func UpdateCommentCount(vid, actionType int64) error {
+	num := 1
+	if actionType == 2 {
+		num = -1
+	}
+
+	db := GetDB()
+	err := db.Model(&model.Video{}).Where("id = ?", vid).Update("comment_count", gorm.Expr("comment_count + ?", num)).Error
+	if err != nil {
+		return err
+	}
+	return nil
+}

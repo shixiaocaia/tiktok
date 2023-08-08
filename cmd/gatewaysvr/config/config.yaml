@@ -10,7 +10,6 @@ svr_config:
   favorite_svr_name: "favoritesvr"
   relation_svr_name: "relationsvr"
   comment_svr_name: "commentsvr"
-  test_svr_name: "testsvr"
 
 
 log:

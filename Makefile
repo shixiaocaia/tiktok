@@ -1,9 +1,9 @@
 # Go编译器
 GO := go
 
-.PHONY: all clean gatewaysvr usersvr videosvr favoritesvr
+.PHONY: all clean gatewaysvr usersvr videosvr favoritesvr commentsvr
 
-all: gatewaysvr usersvr videosvr favoritesvr
+all: gatewaysvr usersvr videosvr favoritesvr commentsvr
 
 gatewaysvr:
 	cd cmd/gatewaysvr && $(GO) run main.go
@@ -16,6 +16,9 @@ videosvr:
 
 favoritesvr:
 	cd cmd/favoritesvr && $(GO) run main.go
+
+commentsvr:
+	cd cmd/commentsvr && $(GO) run main.go
 
 clean:
 	# 清理操作...

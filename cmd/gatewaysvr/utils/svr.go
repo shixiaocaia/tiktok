@@ -17,12 +17,14 @@ var (
 	UserSvrClient  pb.UserServiceClient
 	VideoClient    pb.VideoServiceClient
 	FavoriteClient pb.FavoriteServiceClient
+	CommentClient  pb.CommentServiceClient
 )
 
 func InitSvrConn() {
 	UserSvrClient = NewUserSvrClient(config.GetGlobalConfig().SvrConfig.UserSvrName)
 	VideoClient = NewVideoClient(config.GetGlobalConfig().SvrConfig.VideoSvrName)
 	FavoriteClient = NewFavoriteClient(config.GetGlobalConfig().SvrConfig.FavoriteSvrName)
+	CommentClient = NewCommentClient(config.GetGlobalConfig().SvrConfig.CommentSvrName)
 }
 
 func NewSvrConn(svrName string) (*grpc.ClientConn, error) {
@@ -50,6 +52,10 @@ func GetUserSvrClient() pb.UserServiceClient {
 
 func GetVideoSvrClient() pb.VideoServiceClient {
 	return VideoClient
+}
+
+func GetCommentSvrClient() pb.CommentServiceClient {
+	return CommentClient
 }
 
 func GetFavoriteSvrClient() pb.FavoriteServiceClient {
@@ -86,4 +92,12 @@ func NewFavoriteClient(svrName string) pb.FavoriteServiceClient {
 		return nil
 	}
 	return pb.NewFavoriteServiceClient(conn)
+}
+
+func NewCommentClient(svrName string) pb.CommentServiceClient {
+	conn, err := NewSvrConn(svrName)
+	if err != nil {
+		return nil
+	}
+	return pb.NewCommentServiceClient(conn)
 }

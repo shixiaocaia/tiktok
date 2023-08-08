@@ -9,18 +9,12 @@ import (
 	"github.com/shixiaocaia/tiktok/pkg/pb"
 )
 
-type FavActionParams struct {
-	UserID     int64
-	VideoId    int64 `form:"video_id" binding:"required"`
-	ActionType int64 `form:"action_type" binding:"required,oneof=1 2"`
-}
-
 // FavoriteAction 点赞/取消赞
 func FavoriteAction(ctx *gin.Context) {
-	var favInfo FavActionParams
+	var favInfo constant.FavoriteActionParams
 	err := ctx.ShouldBindQuery(&favInfo)
 	if err != nil {
-		log.Errorf("FavoriteAction ShouldBindQuery failed: %v", err)
+		log.Errorf("favInfo ShouldBindQuery failed: %v", err)
 		response.Fail(ctx, err.Error(), nil)
 		return
 	}

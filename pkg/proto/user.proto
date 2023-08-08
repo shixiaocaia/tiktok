@@ -7,13 +7,14 @@ option go_package = "../pb;pb";
 import "common.proto";
 
 service UserService {
-  rpc GetUserInfo(GetUserInfoRequest) returns (GetUserInfoResponse); // 获取用户信息
-  rpc GetUserInfoDict(GetUserInfoDictRequest) returns (GetUserInfoDictResponse); // 获取用户信息字典
-  rpc CheckPassWord(CheckPassWordRequest) returns (CheckPassWordResponse); //检查密码
-  rpc Register(RegisterRequest) returns (RegisterResponse); // 注册
-  rpc GetUserInfoList(GetUserInfoListRequest) returns (GetUserInfoListResponse); // 获取用户列表信息
-  rpc CacheChangeUserCount(CacheChangeUserCountReq) returns (CacheChangeUserCountRsp);
-  rpc CacheGetAuthor (CacheGetAuthorReq) returns (CacheGetAuthorRsp);
+  // 获取用户信息
+  rpc GetUserInfo(GetUserInfoRequest) returns (GetUserInfoResponse);
+  // 获取用户信息字典
+  rpc GetUserInfoDict(GetUserInfoDictRequest) returns (GetUserInfoDictResponse);
+  //检查密码
+  rpc CheckPassWord(CheckPassWordRequest) returns (CheckPassWordResponse);
+  // 注册
+  rpc Register(RegisterRequest) returns (RegisterResponse);
   // 更新 我的获赞数
   rpc UpdateUserFavoritedCount(UpdateUserFavoritedCountReq) returns (UpdateUserFavoritedCountRsp);
   // 更新我喜欢的视频总数
@@ -24,72 +25,13 @@ service UserService {
   rpc UpdateUserFollowerCount(UpdateUserFollowerCountReq) returns (UpdateUserFollowerCountRsp);
   // 更新我的作品数
   rpc UpdateWorkCount(UpdateUserWorkCountReq) returns (UpdateUserWorkCountRsp);
+
+  //todo
+  rpc CacheChangeUserCount(CacheChangeUserCountReq) returns (CacheChangeUserCountRsp);
+  rpc CacheGetAuthor (CacheGetAuthorReq) returns (CacheGetAuthorRsp);
 }
 
-// UpdateUserFollowCount
-message UpdateUserFollowCountReq {
-  int64 user_id = 1;
-  int64 action_type = 2;
-}
-
-message UpdateUserFollowCountRsp {
-  CommonResponse common_rsp = 1;
-}
-// ******
-
-// UpdateUserFollowerCount
-message UpdateUserFollowerCountReq {
-  int64 user_id = 1;
-  int64 action_type = 2;
-}
-
-message UpdateUserFollowerCountRsp {
-  CommonResponse common_rsp = 1;
-}
-// ******
-
-
-// UpdateUserFavoritedCount
-message UpdateUserFavoritedCountReq {
-  int64 user_id = 1;
-  int64 action_type = 2;
-}
-
-message UpdateUserFavoritedCountRsp {
-  CommonResponse common_rsp = 1;
-}
-// ******
-
-// UpdateUserFavoriteCount
-message UpdateUserFavoriteCountReq {
-  int64 user_id = 1;
-  int64 action_type = 2;
-}
-
-message UpdateUserFavoriteCountRsp {
-  CommonResponse common_rsp = 1;
-}
-// ******
-
-message UpdateUserWorkCountReq {
-  int64 user_id = 1;
-}
-
-message UpdateUserWorkCountRsp {
-  CommonResponse common_rsp = 1;
-}
-
-// ******
-message GetUserInfoDictRequest {
-  repeated int64 user_id_list = 1;
-}
-
-message GetUserInfoDictResponse {
-  map<int64, UserInfo> user_info_dict = 1;
-}
-// ******
-
-// 用户信息
+// UserInfo
 message UserInfo {
   int64 id = 1; // 用户id
   string name = 2; // 用户名称
@@ -103,6 +45,72 @@ message UserInfo {
   int64 work_count = 10; // 视频数量
   int64 favorite_count = 11; // 点赞数量
 }
+
+// ******
+message UpdateUserFollowCountReq {
+  int64 user_id = 1;
+  int64 action_type = 2;
+}
+
+message UpdateUserFollowCountRsp {
+  CommonResponse common_rsp = 1;
+}
+// ******
+
+// ******
+message UpdateUserFollowerCountReq {
+  int64 user_id = 1;
+  int64 action_type = 2;
+}
+
+message UpdateUserFollowerCountRsp {
+  CommonResponse common_rsp = 1;
+}
+// ******
+
+// ******
+message UpdateUserFavoritedCountReq {
+  int64 user_id = 1;
+  int64 action_type = 2;
+}
+
+message UpdateUserFavoritedCountRsp {
+  CommonResponse common_rsp = 1;
+}
+// ******
+
+
+// ******
+message UpdateUserFavoriteCountReq {
+  int64 user_id = 1;
+  int64 action_type = 2;
+}
+
+message UpdateUserFavoriteCountRsp {
+  CommonResponse common_rsp = 1;
+}
+// ******
+
+// ******
+message UpdateUserWorkCountReq {
+  int64 user_id = 1;
+}
+
+message UpdateUserWorkCountRsp {
+  CommonResponse common_rsp = 1;
+}
+// ******
+
+
+// ******
+message GetUserInfoDictRequest {
+  repeated int64 user_id_list = 1;
+}
+
+message GetUserInfoDictResponse {
+  map<int64, UserInfo> user_info_dict = 1;
+}
+// ******
 
 
 // ******
@@ -147,17 +155,9 @@ message RegisterResponse {
 }
 // ******
 
-// ******
-message GetUserInfoListRequest {
-  repeated int64 id_list = 1;
-}
-
-message GetUserInfoListResponse {
-  repeated UserInfo user_info_list = 1;
-}
-// ******
 
 
+//todo
 // ******
 message CacheChangeUserCountReq {
   int64 user_id = 1;
@@ -179,3 +179,4 @@ message CacheGetAuthorRsp {
   int64 user_id = 1;
 }
 // ******
+

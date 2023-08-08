@@ -139,3 +139,12 @@ func (u VideoService) GetVideoInfoList(ctx context.Context, req *pb.GetVideoInfo
 	}
 	return rsp, nil
 }
+
+// UpdateCommentCount 更新视频评论数
+func (u VideoService) UpdateCommentCount(ctx context.Context, req *pb.UpdateCommentCountReq) (*pb.UpdateCommentCountRsp, error) {
+	err := dao.UpdateCommentCount(req.VideoId, req.ActionType)
+	if err != nil {
+		return nil, err
+	}
+	return &pb.UpdateCommentCountRsp{}, nil
+}
