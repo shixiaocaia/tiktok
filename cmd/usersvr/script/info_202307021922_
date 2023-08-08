@@ -1,0 +1,4 @@
+2023-07-02T19:22:19.859+0800	[34mINFO[0m	usersvr/main.go:31	log init success...
+2023-07-02T19:22:19.862+0800	[34mINFO[0m	usersvr/main.go:55	Init Consul Register success
+2023-07-02T19:22:19.862+0800	[34mINFO[0m	usersvr/main.go:58	TikTokLite.relation_svr listening on 43.139.192.217:8000
+2023-07-02T19:22:24.548+0800	[34mINFO[0m	usersvr/main.go:76	注销成功

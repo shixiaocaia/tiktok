@@ -2,9 +2,21 @@ syntax = "proto3";
 
 option go_package = "../pb;pb";
 import "common.proto";
-// 这里有多个--proto_path是因为当前proto文件中有import别的proto文件，在构建的时候这些proto文件要从--proto_path指定的多个路径去找，
-// 一个没找到就回去从另一个招
-// protoc --proto_path=../../../user/proto/ --proto_path=. --go_out=. ./*.proto
+
+
+service RelationService {
+  // 关联关系方法
+  rpc RelationAction(RelationActionReq) returns (RelationActionRsp);
+  // 获取被关注者列表
+  rpc GetRelationFollowList(GetRelationFollowListReq) returns (GetRelationFollowListRsp);
+  // 获取关注者列表
+  rpc GetRelationFollowerList(GetRelationFollowerListReq) returns (GetRelationFollowerListRsp);
+  // 获取是否关注
+  rpc IsFollowDict(IsFollowDictReq) returns (IsFollowDictRsp);
+  // 获取好友列表
+
+}
+
 
 // 关注关系方法
 message RelationActionReq {
@@ -48,12 +60,7 @@ message IsFollowDictRsp {
 }
 
 
-service RelationService {
-  rpc RelationAction(RelationActionReq) returns (RelationActionRsp); // 关联关系方法
-  rpc GetRelationFollowList(GetRelationFollowListReq) returns (GetRelationFollowListRsp); // 获取被关注者列表
-  rpc GetRelationFollowerList(GetRelationFollowerListReq) returns (GetRelationFollowerListRsp); // 获取关注者列表
-  rpc IsFollowDict(IsFollowDictReq) returns (IsFollowDictRsp); // 获取是否关注
-}
+
 
 
 
