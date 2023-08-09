@@ -14,6 +14,7 @@ func MessageChat(ctx *gin.Context) {
 	UserId, _ := ctx.Get("UserID")
 	toUserId, err := strconv.ParseInt(ctx.Query("to_user_id"), 10, 64)
 	if err != nil {
+		log.Debugf("new one...")
 		log.Errorf("to_user_id is not int64: %v", err)
 		response.Fail(ctx, err.Error(), nil)
 		return
@@ -21,7 +22,7 @@ func MessageChat(ctx *gin.Context) {
 	lastTime, err := strconv.ParseInt(ctx.Query("pre_msg_time"), 10, 64)
 	if err != nil || lastTime == int64(0) {
 		log.Errorf("pre_msg_time is invalid")
-		lastTime = utils.GetCurrentTime()
+		lastTime = int64(0)
 	}
 	log.Debugf("userId: %v, toUserId: %v, pre_msg_time: %v", UserId, toUserId, lastTime)
 

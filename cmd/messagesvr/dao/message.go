@@ -11,7 +11,14 @@ func GetMessage(toUserId, fromUserId, preMsgTime int64) ([]*pb.Message, error) {
 	db := GetDB()
 	var messageList []*pb.Message
 	log.Debugf("toUserId: %v, fromUserId: %v, preMsgTime: %v", toUserId, fromUserId, preMsgTime)
-	err := db.Model(&Message{}).Where("((to_user_id = ? AND from_user_id = ?) OR (to_user_id = ? AND from_user_id = ?)) AND create_time < ?", toUserId, fromUserId, fromUserId, toUserId, preMsgTime).Order("create_time").Limit(20).Find(&messageList).Error
+	//err := db.Model(&Message{}).Where("((to_user_id = ? AND from_user_id = ?) OR (to_user_id = ? AND from_user_id = ?)) AND create_time < ?", toUserId, fromUserId, fromUserId, toUserId, preMsgTime).Order("create_time ASC").Limit(20).Find(&messageList).Error
+	err := db.Model(&Message{}).
+		Where("((to_user_id = ? AND from_user_id = ?) OR (to_user_id = ? AND from_user_id = ?)) AND create_time > ?", toUserId, fromUserId, fromUserId, toUserId, preMsgTime).
+		Order("create_time ASC").
+		Limit(20).
+		Find(&messageList).
+		Error
+
 	if err != nil {
 		if err == gorm.ErrRecordNotFound {
 			return nil, nil
