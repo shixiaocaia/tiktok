@@ -20,5 +20,8 @@ favoritesvr:
 commentsvr:
 	cd cmd/commentsvr && $(GO) run main.go
 
+relationsvr:
+	cd cmd/relationsvr && $(GO) run main.go
+
 clean:
 	# 清理操作...

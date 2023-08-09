@@ -34,7 +34,6 @@
 │        └── utils 工具类
 ├── log 日志文件
 ├── pkg proto文件
-├── model 数据库模型
 ├── README.md
 ```
 

@@ -27,6 +27,7 @@ func SetRoute() *gin.Engine {
 		FavoriteRoutes(douyin)
 		CommentRoutes(douyin)
 		RalationRoutes(douyin)
+		MessageRoutes(douyin)
 		douyin.GET("/feed/", jwtoken.JWTWithoutAuthMiddleware(), controller.Feed)
 	}
 	return r

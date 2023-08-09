@@ -9,27 +9,27 @@ echo "SERVER_NAME=${SERVER_NAME}"
 array=("gatewaysvr" "commentsvr" "favoritesvr" "relationsvr" "usersvr" "videosvr" "all")
 
 run()
-{
+{ 
     if [[ ! "${array[@]}"  =~ ${SERVER_NAME} ]]; then
         echo "server name is not correct"
         exit 0
     elif [ ${SERVER_NAME} = "gatewaysvr" ];then
-        cd ../cmd/gatewaysvr/script
+        cd ../server/gatewaysvr/script
         ./build.sh
     elif [ ${SERVER_NAME} = "commentsvr" ];then
-        cd ../cmd/commentsvr/script
+        cd ../server/commentsvr/script
         ./build.sh
     elif [ ${SERVER_NAME} = "favoritesvr" ];then
-        cd ../cmd/favoritesvr/script
+        cd ../server/favoritesvr/script
         ./build.sh
     elif [ ${SERVER_NAME} = "relationsvr" ];then
-        cd ../cmd/relationsvr/script
+        cd ../server/relationsvr/script
         ./build.sh
     elif [ ${SERVER_NAME} = "usersvr" ];then
-        cd ../cmd/usersvr/script
+        cd ../server/usersvr/script
         ./build.sh
     elif [ ${SERVER_NAME} = "videosvr" ];then
-        cd ../cmd/videosvr/script
+        cd ../server/videosvr/script
         ./build.sh
     elif [ ${SERVER_NAME} = "all" ];then
         cd ../cmd/usersvr/script

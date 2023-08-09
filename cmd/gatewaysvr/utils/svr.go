@@ -19,6 +19,7 @@ var (
 	FavoriteClient pb.FavoriteServiceClient
 	CommentClient  pb.CommentServiceClient
 	RelationClient pb.RelationServiceClient
+	MessageClient  pb.MessageServiceClient
 )
 
 func InitSvrConn() {
@@ -27,6 +28,7 @@ func InitSvrConn() {
 	FavoriteClient = NewFavoriteClient(config.GetGlobalConfig().SvrConfig.FavoriteSvrName)
 	CommentClient = NewCommentClient(config.GetGlobalConfig().SvrConfig.CommentSvrName)
 	RelationClient = NewRelationClient(config.GetGlobalConfig().SvrConfig.RelationSvrName)
+	MessageClient = NewMessageClient(config.GetGlobalConfig().SvrConfig.MessageSvrName)
 }
 
 func NewSvrConn(svrName string) (*grpc.ClientConn, error) {
@@ -68,20 +70,16 @@ func GetRelationSvrClient() pb.RelationServiceClient {
 	return RelationClient
 }
 
+func GetMessageSvrClient() pb.MessageServiceClient {
+	return MessageClient
+}
+
 func NewUserSvrClient(svrName string) pb.UserServiceClient {
 	conn, err := NewSvrConn(svrName)
 	if err != nil {
 		return nil
 	}
 	return pb.NewUserServiceClient(conn)
-}
-
-func NewGreeterClient(svrName string) pb.GreeterClient {
-	conn, err := NewSvrConn(svrName)
-	if err != nil {
-		return nil
-	}
-	return pb.NewGreeterClient(conn)
 }
 
 func NewVideoClient(svrName string) pb.VideoServiceClient {
@@ -114,4 +112,12 @@ func NewRelationClient(svrName string) pb.RelationServiceClient {
 		return nil
 	}
 	return pb.NewRelationServiceClient(conn)
+}
+
+func NewMessageClient(svrName string) pb.MessageServiceClient {
+	conn, err := NewSvrConn(svrName)
+	if err != nil {
+		return nil
+	}
+	return pb.NewMessageServiceClient(conn)
 }

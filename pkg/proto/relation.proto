@@ -2,6 +2,7 @@ syntax = "proto3";
 
 option go_package = "../pb;pb";
 // protoc --go_out=. relation.proto
+// protoc --go-grpc_out=. relation.proto
 import "user.proto";
 
 service RelationService {
@@ -14,8 +15,24 @@ service RelationService {
   // 获取是否关注
   rpc IsFollowDict(IsFollowDictReq) returns (IsFollowDictRsp);
   // 获取好友列表
+  rpc IsFriendList(IsFriendListReq) returns (IsFriendListRsp);
 }
-
+// FriendInfo
+message FriendInfo {
+  int64 id = 1; // 用户id
+  string name = 2; // 用户名称
+  int64 follow_count = 3; // 关注总数
+  int64 follower_count = 4; // 粉丝总数
+  bool is_follow = 5; // true-已关注，false-未关注
+  string avatar = 6; //头像地址
+  string background_image = 7;//背景图片地址
+  string signature = 8;//个性签名
+  int64 total_favorited = 9; // 获赞总数
+  int64 work_count = 10; // 视频数量
+  int64 favorite_count = 11; // 点赞数量
+  string message = 12; // 最新消息
+  int64 msgType = 13; // message消息的类型，0 => 当前请求用户接收的消息， 1 => 当前请求用户发送的消息
+}
 
 // ******
 message RelationActionReq {
@@ -69,11 +86,23 @@ message IsFollowDictRsp {
 // ******
 
 
+// ******
+message IsFriendListReq {
+  int64 user_id = 1;
+  repeated int64 user_list = 2;
+}
 
+message IsFriendListRsp {
+  repeated int64 user_list = 1;
+}
 
+message FriendListRsp {
+  int32 status_code = 1;
+  string status_msg = 2;
+  repeated FriendInfo user_list = 3;
+}
 
-
-
+// ******
 
 
 

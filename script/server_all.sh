@@ -48,9 +48,9 @@ run()
             ./server.sh ${ACTION}
             cd ../../favoritesvr/script
             ./server.sh ${ACTION}
-            cd ../../commentsvr/script
-            ./server.sh ${ACTION}
             cd ../../relationsvr/script
+            ./server.sh ${ACTION}
+            cd ../../commentsvr/script
             ./server.sh ${ACTION}
             cd ../../gatewaysvr/script
             ./server.sh ${ACTION}

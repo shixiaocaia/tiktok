@@ -12,20 +12,19 @@ type GlobalConfig struct {
 	*SvrConfig    `mapstructure:"svr_config"`
 	*ConsulConfig `mapstructure:"consul"`
 	*LogConfig    `mapstructure:"log"`
+	*MySQLConfig  `mapstructure:"mysql"`
 }
 
 type SvrConfig struct {
-	Name            string `mapstructure:"name"` // 服务name
-	Host            string `mapstructure:"host"` // 服务host
-	Port            int    `mapstructure:"port"`
-	Mode            string `mapstructure:"mode"`              // gin模式
-	UserSvrName     string `mapstructure:"user_svr_name"`     // 用户服务name
-	VideoSvrName    string `mapstructure:"video_svr_name"`    // 视频服务name
-	CommentSvrName  string `mapstructure:"comment_svr_name"`  // 评论服务name
-	RelationSvrName string `mapstructure:"relation_svr_name"` // 关系服务name
-	FavoriteSvrName string `mapstructure:"favorite_svr_name"` // 收藏服务name
-	MessageSvrName  string `mapstructure:"message_svr_name"`  // 消息服务name
-	VideoPath       string `mapstructure:"video_path"`        // 视频存放路径（有耦合，后面处理）
+	Name string `mapstructure:"name"` // 服务name
+	Host string `mapstructure:"host"` // 服务host
+	Port int    `mapstructure:"port"` // 服务port
+}
+
+type ConsulConfig struct {
+	Host string   `mapstructure:"host"`
+	Port int      `mapstructure:"port"`
+	Tags []string `mapstructure:"tag"`
 }
 
 type LogConfig struct {
@@ -34,13 +33,19 @@ type LogConfig struct {
 	LogPath    string `mapstructure:"log_path"`
 	MaxSize    int    `mapstructure:"max_size"`
 	MaxAge     int    `mapstructure:"max_age"`
-	MaxBackUps int    `mapstructure:"max_backups"`
+	MaxBackups int    `mapstructure:"max_backups"`
 }
 
-type ConsulConfig struct {
-	Host string   `mapstructure:"host"`
-	Port int      `mapstructure:"port"`
-	Tag  []string `mapstructure:"tag"`
+type MySQLConfig struct {
+	Host        string `mapstructure:"host"`
+	Port        string `mapstructure:"port"`
+	DataBase    string `mapstructure:"database"`
+	UserName    string `mapstructure:"username"`
+	PassWord    string `mapstructure:"password"`
+	MaxIdleConn int    `mapstructure:"max_idle_conn"` // 最大空闲连接数
+	MaxOpenConn int    `mapstructure:"max_open_conn"` // 最大打开的连接数
+	MaxIdleTime int64  `mapstructure:"max_idle_time"` // 连接最大空闲时间
+
 }
 
 // Init 初始化配置

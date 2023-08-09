@@ -1,0 +1,51 @@
+syntax = "proto3";
+
+option go_package = "../pb;pb";
+
+// protoc --go_out=. --go-grpc_out=. message.proto
+// protoc --go-grpc_out=. message.proto
+
+service MessageService {
+    // 接受消息
+    rpc MessageChat(MessageChatReq) returns (MessageChatRsp);
+    // 发送消息
+    rpc MessageAction(MessageActionReq) returns (MessageActionRsp);
+}
+
+message Message{
+  int64 id = 1; // 消息id
+  int64 to_user_id = 2; // 该消息接收者的id
+  int64 from_user_id =3; // 该消息发送者的id
+  string content = 4; // 消息内容
+  string create_time = 5; // 消息创建时间
+}
+
+
+
+// *******************
+message MessageChatReq{
+    int64 to_user_id = 1;
+    int64 user_id = 2;
+    int64 pre_msg_time = 3;
+}
+
+message MessageChatRsp{
+  int32 status_code = 1;
+  string status_msg = 2;
+  repeated Message message_list = 3;
+}
+// *******************
+
+// *******************
+message MessageActionReq{
+  int64 to_user_id = 1;
+  int64 user_id = 2;
+  int32 action_type = 3; // 暂时用不到
+  string content = 4;
+}
+
+message MessageActionRsp{
+  int32 status_code = 1;
+  string status_msg = 2;
+}
+// *******************

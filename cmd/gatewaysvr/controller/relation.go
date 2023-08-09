@@ -183,66 +183,67 @@ func FollowerList(ctx *gin.Context) {
 }
 
 func FriendList(ctx *gin.Context) {
-	Id := ctx.Query("user_id")
-	userId, err := strconv.ParseInt(Id, 10, 64)
-	// 1. 获取粉丝的id
-	followerListRsp, err := utils.RelationClient.GetRelationFollowerList(ctx, &pb.GetRelationFollowerListReq{
-		UserId: userId,
+	// 1. 根据用户ID查其粉丝
+	userID, _ := ctx.Get("UserID")
+	followerList, err := utils.GetRelationSvrClient().GetRelationFollowerList(ctx, &pb.GetRelationFollowerListReq{
+		UserId: userID.(int64),
 	})
-
 	if err != nil {
 		log.Errorf("GetRelationFollowerList failed: %v", err)
 		response.Fail(ctx, err.Error(), nil)
 		return
 	}
-	// 2. 根据id查询粉丝信息
+	// 2. 使用follow:粉丝ID + follower: UserID，判断为好友存在
 	followerIdList := make([]int64, 0)
-	for _, follower := range followerListRsp.UserList {
-		followerIdList = append(followerIdList, follower.Id)
+	for _, val := range followerList.UserList {
+		followerIdList = append(followerIdList, val.Id)
 	}
-	followInfoRsp, err := utils.GetUserSvrClient().GetUserInfoDict(ctx, &pb.GetUserInfoDictRequest{
-		UserIdList: followerIdList,
+	log.Debugf("followIdList: %v", followerIdList)
+	friendList, err := utils.GetRelationSvrClient().IsFriendList(ctx, &pb.IsFriendListReq{
+		UserId:   userID.(int64),
+		UserList: followerIdList,
+	})
+	if err != nil {
+		log.Errorf("IsFriendList failed: %v", err)
+		response.Fail(ctx, err.Error(), nil)
+		return
+	}
+	log.Debugf("friendList: %v", friendList.UserList)
+	// 3. 查询满足条件的UserInfo
+	friendInfo, err := utils.GetUserSvrClient().GetUserInfoDict(ctx, &pb.GetUserInfoDictRequest{
+		UserIdList: friendList.UserList,
 	})
 	if err != nil {
 		log.Errorf("GetUserInfoDict failed: %v", err)
 		response.Fail(ctx, err.Error(), nil)
 		return
 	}
-	// 3. 获取自己关注哪些人
-	SelfId, _ := ctx.Get("UserID")
-	FollowDic, err := utils.GetRelationSvrClient().IsFollowDict(ctx, &pb.IsFollowDictReq{
-		UserId: SelfId.(int64),
-	})
-	if err != nil {
-		log.Errorf("IsFollowDict failed: %v", err)
-		response.Fail(ctx, err.Error(), nil)
-		return
-	}
 
-	// 4. 填充具体信息
-	InfoMap := followInfoRsp.UserInfoDict
-	followMap := FollowDic.IsFollowDict
-	followerUser := make([]*pb.UserInfo, 0)
-	for _, follower := range followerListRsp.UserList {
-		Info := InfoMap[follower.Id]
-		followerUser = append(followerUser, &pb.UserInfo{
-			Id:            Info.Id,
-			Name:          Info.Name,
-			FollowCount:   Info.FollowCount,
-			FollowerCount: Info.FollowerCount,
-			// todo是否关注了这名粉丝
-			IsFollow:        followMap[follower.Id],
+	// 4. 查询聊天记录的最新一条
+
+	// 4. 填充响应
+	rsp := &pb.FriendListRsp{
+		UserList: make([]*pb.FriendInfo, 0),
+	}
+	for _, friendId := range friendList.UserList {
+		Info := friendInfo.UserInfoDict[friendId]
+		rsp.UserList = append(rsp.UserList, &pb.FriendInfo{
+			Id:              Info.Id,
+			Name:            Info.Name,
+			FollowCount:     Info.FollowCount,
+			FollowerCount:   Info.FollowerCount,
+			IsFollow:        true,
 			Avatar:          Info.Avatar,
 			BackgroundImage: Info.BackgroundImage,
 			Signature:       Info.Signature,
 			TotalFavorited:  Info.TotalFavorited,
 			WorkCount:       Info.WorkCount,
 			FavoriteCount:   Info.FavoriteCount,
+			//todo 更新
+			Message: "Hello",
+			MsgType: 1,
 		})
 	}
-
-	log.Infof("get user %v follower", userId)
-	response.Success(ctx, "success", &pb.GetRelationFollowerListRsp{
-		UserList: followerUser,
-	})
+	log.Infof("FriendList lived...")
+	response.Success(ctx, "success", rsp)
 }
