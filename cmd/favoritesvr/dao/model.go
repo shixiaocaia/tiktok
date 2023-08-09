@@ -1,4 +1,4 @@
-package model
+package dao
 
 type Favorite struct {
 	Id      int64 `gorm:"column:id; primary_key;"` // favorite_id

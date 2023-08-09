@@ -1,7 +1,6 @@
 package dao
 
 import (
-	"github.com/shixiaocaia/tiktok/model"
 	"gorm.io/gorm"
 )
 
@@ -13,7 +12,7 @@ func UpdateFavorite(action, vid int64) error {
 	} else {
 		num = -1
 	}
-	err := db.Model(&model.Video{}).Where("id = ?", vid).Update("favorite_count", gorm.Expr("favorite_count + ?", num)).Error
+	err := db.Model(&Video{}).Where("id = ?", vid).Update("favorite_count", gorm.Expr("favorite_count + ?", num)).Error
 	if err != nil {
 		return err
 	}

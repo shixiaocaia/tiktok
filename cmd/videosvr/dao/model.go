@@ -1,4 +1,4 @@
-package model
+package dao
 
 type Video struct {
 	Id            int64  `gorm:"column:id; primary_key;"` // video_id

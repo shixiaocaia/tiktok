@@ -45,4 +45,4 @@ cd script
 # 编译所有微服务
 ./build_all.sh all
 # 启动/停止所有微服务
-./server_all.sh start/start all
+./server_all.sh start/sop all

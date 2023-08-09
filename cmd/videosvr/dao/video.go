@@ -2,14 +2,13 @@ package dao
 
 import (
 	"github.com/shixiaocaia/tiktok/cmd/videosvr/log"
-	"github.com/shixiaocaia/tiktok/model"
 	"gorm.io/gorm"
 	"time"
 )
 
 // GetVideoListByFeed 获取视频信息
-func GetVideoListByFeed(time int64) ([]model.Video, error) {
-	var videos []model.Video
+func GetVideoListByFeed(time int64) ([]Video, error) {
+	var videos []Video
 	db := GetDB()
 	err := db.Where("publish_time < ?", time).Limit(30).Order("publish_time DESC").Find(&videos).Error
 	if err != nil && err != gorm.ErrRecordNotFound {
@@ -22,7 +21,7 @@ func GetVideoListByFeed(time int64) ([]model.Video, error) {
 
 // InsertVideo 记录视频信息
 func InsertVideo(authorID int64, playUrl, picUrl, title string) error {
-	video := model.Video{
+	video := Video{
 		AuthorId:      authorID,
 		PlayUrl:       playUrl,
 		CoverUrl:      picUrl,
@@ -42,13 +41,13 @@ func InsertVideo(authorID int64, playUrl, picUrl, title string) error {
 }
 
 // GetVideoListByAuthorID 根据authorID获取视频
-func GetVideoListByAuthorID(authorId int64) ([]model.Video, error) {
-	var videos []model.Video
+func GetVideoListByAuthorID(authorId int64) ([]Video, error) {
+	var videos []Video
 
 	db := GetDB()
 	err := db.Where("author_id = ?", authorId).Order("id DESC").Find(&videos).Error
 	if err != nil && err != gorm.ErrRecordNotFound {
-		log.Errorf("GetVideoListByAuthorID faild: %v", err)
+		log.Errorf("GetVideoListByAuthorID failed: %v", err)
 		return nil, err
 	}
 	log.Debugf("videos: %v", videos)
@@ -56,8 +55,8 @@ func GetVideoListByAuthorID(authorId int64) ([]model.Video, error) {
 }
 
 // GetVideoListByVideoIdList 获取用户发布的多个视频
-func GetVideoListByVideoIdList(videoId []int64) ([]model.Video, error) {
-	var videos []model.Video
+func GetVideoListByVideoIdList(videoId []int64) ([]Video, error) {
+	var videos []Video
 	db := GetDB()
 	err := db.Where("id in ?", videoId).Find(&videos).Error
 	if err != nil && err != gorm.ErrRecordNotFound {
@@ -74,7 +73,7 @@ func UpdateCommentCount(vid, actionType int64) error {
 	}
 
 	db := GetDB()
-	err := db.Model(&model.Video{}).Where("id = ?", vid).Update("comment_count", gorm.Expr("comment_count + ?", num)).Error
+	err := db.Model(&Video{}).Where("id = ?", vid).Update("comment_count", gorm.Expr("comment_count + ?", num)).Error
 	if err != nil {
 		return err
 	}

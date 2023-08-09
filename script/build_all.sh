@@ -38,6 +38,8 @@ run()
         ./build.sh
         cd ../../favoritesvr/script
         ./build.sh
+        cd ../../relationsvr/script
+        ./build.sh
         cd ../../commentsvr/script
         ./build.sh
         cd ../../gatewaysvr/script

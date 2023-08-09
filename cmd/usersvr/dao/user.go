@@ -4,14 +4,13 @@ import (
 	"errors"
 	"github.com/shixiaocaia/tiktok/cmd/usersvr/constant"
 	"github.com/shixiaocaia/tiktok/cmd/usersvr/log"
-	"github.com/shixiaocaia/tiktok/model"
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 )
 
 func UserNameIsExist(username string) (bool, error) {
 	db := GetDB()
-	user := model.User{}
+	user := User{}
 	err := db.Where("user_name = ?", username).First(&user).Error
 	if err != nil {
 		if err.Error() != gorm.ErrRecordNotFound.Error() {
@@ -22,12 +21,12 @@ func UserNameIsExist(username string) (bool, error) {
 	return true, nil
 }
 
-func InsertUser(username, password string) (*model.User, error) {
+func InsertUser(username, password string) (*User, error) {
 	db := GetDB()
 	// 加密密文，明文存储密码不安全
 	hashPassword, _ := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	// mysql创建用户
-	user := model.User{
+	user := User{
 		Name:            username,
 		Password:        string(hashPassword),
 		Follow:          0,
@@ -39,7 +38,7 @@ func InsertUser(username, password string) (*model.User, error) {
 		BackgroundImage: "https://tse2-mm.cn.bing.net/th/id/OIP-C.sDoybxmH4DIpvO33-wQEPgHaEq?pid=ImgDet&rs=1",
 		Signature:       "test sign",
 	}
-	result := db.Model(&model.User{}).Create(&user)
+	result := db.Model(&User{}).Create(&user)
 	if result.Error != nil {
 		return nil, result.Error
 	}
@@ -50,9 +49,9 @@ func InsertUser(username, password string) (*model.User, error) {
 	return &user, nil
 }
 
-func GetUserInfo(u interface{}) (model.User, error) {
+func GetUserInfo(u interface{}) (User, error) {
 	db := GetDB()
-	user := model.User{}
+	user := User{}
 	var err error
 
 	switch u := u.(type) {
@@ -69,9 +68,9 @@ func GetUserInfo(u interface{}) (model.User, error) {
 	return user, nil
 }
 
-func GetUserListInfo(userIdList []int64) ([]*model.User, error) {
+func GetUserListInfo(userIdList []int64) ([]*User, error) {
 	db := GetDB()
-	var users []*model.User
+	var users []*User
 	log.Debugf("userIdList: %v", userIdList)
 	err := db.Where("id in ?", userIdList).Find(&users).Error
 	if err != nil && err != gorm.ErrRecordNotFound {

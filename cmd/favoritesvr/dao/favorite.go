@@ -2,17 +2,16 @@ package dao
 
 import (
 	"github.com/shixiaocaia/tiktok/cmd/favoritesvr/log"
-	"github.com/shixiaocaia/tiktok/model"
 	"gorm.io/gorm"
 )
 
 func LikeAction(userID, videoID int64) error {
 	db := GetDB()
-	favorite := &model.Favorite{
+	favorite := &Favorite{
 		UserId:  userID,
 		VideoId: videoID,
 	}
-	err := db.Where("user_id = ? and video_id = ?", userID, videoID).First(&model.Favorite{}).Error
+	err := db.Where("user_id = ? and video_id = ?", userID, videoID).First(&Favorite{}).Error
 	if err != nil && err != gorm.ErrRecordNotFound {
 		return err
 	}
@@ -27,7 +26,7 @@ func LikeAction(userID, videoID int64) error {
 
 func DislikeAction(userID, videoID int64) error {
 	db := GetDB()
-	err := db.Where("user_id = ? and video_id = ?", userID, videoID).Delete(&model.Favorite{}).Error
+	err := db.Where("user_id = ? and video_id = ?", userID, videoID).Delete(&Favorite{}).Error
 	if err != nil {
 		return err
 	}
@@ -37,7 +36,7 @@ func DislikeAction(userID, videoID int64) error {
 
 func IsFavoriteVideo(uid, vid int64) (bool, error) {
 	db := GetDB()
-	err := db.Where("user_id = ? and video_id = ?", uid, vid).First(&model.Favorite{}).Error
+	err := db.Where("user_id = ? and video_id = ?", uid, vid).First(&Favorite{}).Error
 	if err != nil {
 		// 没有找到记录说明不是点赞视频
 		if err == gorm.ErrRecordNotFound {
@@ -50,8 +49,8 @@ func IsFavoriteVideo(uid, vid int64) (bool, error) {
 
 func GetFavoriteVideoIdList(uid int64) ([]int64, error) {
 	db := GetDB()
-	var favoriteList []*model.Favorite
-	err := db.Model(&model.Favorite{}).Where("user_id = ?", uid).Find(&favoriteList).Error
+	var favoriteList []*Favorite
+	err := db.Model(&Favorite{}).Where("user_id = ?", uid).Find(&favoriteList).Error
 	if err != nil {
 		if err == gorm.ErrRecordNotFound {
 			return []int64{}, nil

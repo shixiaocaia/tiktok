@@ -2,7 +2,6 @@ package dao
 
 import (
 	"github.com/shixiaocaia/tiktok/cmd/usersvr/log"
-	"github.com/shixiaocaia/tiktok/model"
 	"gorm.io/gorm"
 )
 
@@ -13,7 +12,7 @@ func UpdateFollowCount(uid, actionType int64) error {
 	}
 	log.Debugf("UpdateFollowCount")
 	db := GetDB()
-	err := db.Model(&model.User{}).Where("id = ?", uid).Update("follow_count", gorm.Expr("follow_count + ?", num)).Error
+	err := db.Model(&User{}).Where("id = ?", uid).Update("follow_count", gorm.Expr("follow_count + ?", num)).Error
 	if err != nil {
 		return err
 	}
@@ -27,7 +26,7 @@ func UpdateFollowerCount(uid, actionType int64) error {
 	}
 
 	db := GetDB()
-	err := db.Model(&model.User{}).Where("id = ?", uid).Update("follower_count", gorm.Expr("follower_count + ?", num)).Error
+	err := db.Model(&User{}).Where("id = ?", uid).Update("follower_count", gorm.Expr("follower_count + ?", num)).Error
 	if err != nil {
 		return err
 	}

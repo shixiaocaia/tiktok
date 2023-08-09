@@ -8,7 +8,6 @@ import (
 	"github.com/shixiaocaia/tiktok/cmd/usersvr/dao"
 	"github.com/shixiaocaia/tiktok/cmd/usersvr/log"
 	jwtoken "github.com/shixiaocaia/tiktok/cmd/usersvr/middleware/jwt"
-	"github.com/shixiaocaia/tiktok/model"
 	"github.com/shixiaocaia/tiktok/pkg/pb"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -110,7 +109,7 @@ func (u UserService) GetUserInfoDict(ctx context.Context, req *pb.GetUserInfoDic
 }
 
 // UserToUserInfo 类型转换
-func UserToUserInfo(info model.User) *pb.UserInfo {
+func UserToUserInfo(info dao.User) *pb.UserInfo {
 	return &pb.UserInfo{
 		Id:              info.Id,
 		Name:            info.Name,
@@ -127,7 +126,7 @@ func UserToUserInfo(info model.User) *pb.UserInfo {
 }
 
 // UserToUserInfo2 类型转换(区别上面指针）
-func UserToUserInfo2(info *model.User) *pb.UserInfo {
+func UserToUserInfo2(info *dao.User) *pb.UserInfo {
 	return &pb.UserInfo{
 		Id:              info.Id,
 		Name:            info.Name,

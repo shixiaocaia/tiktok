@@ -1,4 +1,4 @@
-package model
+package dao
 
 type User struct {
 	// gorm.Model
