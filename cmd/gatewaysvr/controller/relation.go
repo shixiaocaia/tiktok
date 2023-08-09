@@ -219,14 +219,24 @@ func FriendList(ctx *gin.Context) {
 		return
 	}
 
-	// 4. 查询聊天记录的最新一条
+	// 4. 查询所有好友聊天记录的最新一条
+	chatList, err := utils.GetMessageSvrClient().NewestMessageDic(ctx, &pb.NewestMessageReq{
+		UserId:       userID.(int64),
+		FriendIdList: friendList.UserList,
+	})
+	if err != nil {
+		log.Errorf("NewestMessageDic failed: %v", err)
+		response.Fail(ctx, err.Error(), nil)
+		return
+	}
 
-	// 4. 填充响应
+	// 5. 填充响应
 	rsp := &pb.FriendListRsp{
 		UserList: make([]*pb.FriendInfo, 0),
 	}
 	for _, friendId := range friendList.UserList {
 		Info := friendInfo.UserInfoDict[friendId]
+		message := chatList.NewestMessageDict[friendId]
 		rsp.UserList = append(rsp.UserList, &pb.FriendInfo{
 			Id:              Info.Id,
 			Name:            Info.Name,
@@ -239,10 +249,10 @@ func FriendList(ctx *gin.Context) {
 			TotalFavorited:  Info.TotalFavorited,
 			WorkCount:       Info.WorkCount,
 			FavoriteCount:   Info.FavoriteCount,
-			//todo 更新
-			Message: "Hello",
-			MsgType: 1,
+			Message:         message.Message,
+			MsgType:         message.MsgType,
 		})
+
 	}
 	log.Infof("FriendList lived...")
 	response.Success(ctx, "success", rsp)

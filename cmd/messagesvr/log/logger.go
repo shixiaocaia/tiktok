@@ -1,7 +1,7 @@
 package log
 
 import (
-	"github.com/shixiaocaia/tiktok/cmd/relationsvr/config"
+	"github.com/shixiaocaia/tiktok/cmd/messagesvr/config"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 	"gopkg.in/natefinch/lumberjack.v2"

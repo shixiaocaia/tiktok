@@ -19,8 +19,9 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	MessageService_MessageChat_FullMethodName   = "/MessageService/MessageChat"
-	MessageService_MessageAction_FullMethodName = "/MessageService/MessageAction"
+	MessageService_MessageChat_FullMethodName      = "/MessageService/MessageChat"
+	MessageService_MessageAction_FullMethodName    = "/MessageService/MessageAction"
+	MessageService_NewestMessageDic_FullMethodName = "/MessageService/NewestMessageDic"
 )
 
 // MessageServiceClient is the client API for MessageService service.
@@ -31,6 +32,8 @@ type MessageServiceClient interface {
 	MessageChat(ctx context.Context, in *MessageChatReq, opts ...grpc.CallOption) (*MessageChatRsp, error)
 	// 发送消息
 	MessageAction(ctx context.Context, in *MessageActionReq, opts ...grpc.CallOption) (*MessageActionRsp, error)
+	// 查询最新的一条信息
+	NewestMessageDic(ctx context.Context, in *NewestMessageReq, opts ...grpc.CallOption) (*NewestMessageRsp, error)
 }
 
 type messageServiceClient struct {
@@ -59,6 +62,15 @@ func (c *messageServiceClient) MessageAction(ctx context.Context, in *MessageAct
 	return out, nil
 }
 
+func (c *messageServiceClient) NewestMessageDic(ctx context.Context, in *NewestMessageReq, opts ...grpc.CallOption) (*NewestMessageRsp, error) {
+	out := new(NewestMessageRsp)
+	err := c.cc.Invoke(ctx, MessageService_NewestMessageDic_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // MessageServiceServer is the server API for MessageService service.
 // All implementations must embed UnimplementedMessageServiceServer
 // for forward compatibility
@@ -67,6 +79,8 @@ type MessageServiceServer interface {
 	MessageChat(context.Context, *MessageChatReq) (*MessageChatRsp, error)
 	// 发送消息
 	MessageAction(context.Context, *MessageActionReq) (*MessageActionRsp, error)
+	// 查询最新的一条信息
+	NewestMessageDic(context.Context, *NewestMessageReq) (*NewestMessageRsp, error)
 	mustEmbedUnimplementedMessageServiceServer()
 }
 
@@ -79,6 +93,9 @@ func (UnimplementedMessageServiceServer) MessageChat(context.Context, *MessageCh
 }
 func (UnimplementedMessageServiceServer) MessageAction(context.Context, *MessageActionReq) (*MessageActionRsp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method MessageAction not implemented")
+}
+func (UnimplementedMessageServiceServer) NewestMessageDic(context.Context, *NewestMessageReq) (*NewestMessageRsp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method NewestMessageDic not implemented")
 }
 func (UnimplementedMessageServiceServer) mustEmbedUnimplementedMessageServiceServer() {}
 
@@ -129,6 +146,24 @@ func _MessageService_MessageAction_Handler(srv interface{}, ctx context.Context,
 	return interceptor(ctx, in, info, handler)
 }
 
+func _MessageService_NewestMessageDic_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(NewestMessageReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MessageServiceServer).NewestMessageDic(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: MessageService_NewestMessageDic_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MessageServiceServer).NewestMessageDic(ctx, req.(*NewestMessageReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // MessageService_ServiceDesc is the grpc.ServiceDesc for MessageService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -143,6 +178,10 @@ var MessageService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "MessageAction",
 			Handler:    _MessageService_MessageAction_Handler,
+		},
+		{
+			MethodName: "NewestMessageDic",
+			Handler:    _MessageService_NewestMessageDic_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

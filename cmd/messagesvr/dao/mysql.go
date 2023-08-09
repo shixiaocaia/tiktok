@@ -2,8 +2,8 @@ package dao
 
 import (
 	"fmt"
-	"github.com/shixiaocaia/tiktok/cmd/relationsvr/config"
-	"github.com/shixiaocaia/tiktok/cmd/relationsvr/log"
+	"github.com/shixiaocaia/tiktok/cmd/messagesvr/config"
+	"github.com/shixiaocaia/tiktok/cmd/messagesvr/log"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"sync"

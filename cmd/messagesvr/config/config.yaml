@@ -1,12 +1,12 @@
 svr_config:
-  port: 8001
-  name: "relationsvr"
+  port: 8010
+  name: "messagesvr"
   host: "117.72.16.121"
 
 log:
   level: "debug"
-  file_name: "relationsvr.log"
-  log_path: "../../log/relationsvr/"
+  file_name: "messagesvr.log"
+  log_path: "../../log/messagesvr/"
   max_size: 200
   max_age: 30
   max_backups: 7
@@ -16,7 +16,7 @@ consul:
     host: "117.72.16.121"
     port: 8500
     tags:
-      - "relationsvr"
+      - "messagesvr"
 
 mysql:
     username: "root"

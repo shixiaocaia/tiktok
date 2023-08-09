@@ -2,7 +2,7 @@
 
 ulimit -c unlimited
 
-SERVER_NAME="relationsvr"
+SERVER_NAME="messagesvr"
 SCRIPT_PATH=`pwd`
 SERVER_PATH=`echo ${SCRIPT_PATH%/*}`
 SERVER_BIN_PATH="${SCRIPT_PATH}/../bin"

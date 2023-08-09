@@ -3,11 +3,11 @@ package main
 import (
 	"fmt"
 	uuid "github.com/satori/go.uuid"
-	"github.com/shixiaocaia/tiktok/cmd/relationsvr/config"
-	"github.com/shixiaocaia/tiktok/cmd/relationsvr/constant"
-	"github.com/shixiaocaia/tiktok/cmd/relationsvr/log"
-	"github.com/shixiaocaia/tiktok/cmd/relationsvr/middleware/consul"
-	"github.com/shixiaocaia/tiktok/cmd/relationsvr/service"
+	"github.com/shixiaocaia/tiktok/cmd/messagesvr/config"
+	"github.com/shixiaocaia/tiktok/cmd/messagesvr/constant"
+	"github.com/shixiaocaia/tiktok/cmd/messagesvr/log"
+	"github.com/shixiaocaia/tiktok/cmd/messagesvr/middleware/consul"
+	"github.com/shixiaocaia/tiktok/cmd/messagesvr/service"
 	"github.com/shixiaocaia/tiktok/pkg/pb"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/health"
@@ -21,7 +21,7 @@ import (
 func Init() {
 	// 读取配置
 	if err := config.Init(); err != nil {
-		log.Fatalf("init relationSvr config failed, err:%v\n", err)
+		log.Fatalf("init messageSvr config failed, err:%v\n", err)
 	}
 	// 初始化日志
 	log.InitLog()
@@ -40,7 +40,7 @@ func Run() error {
 	// 启动grpc server
 	server := grpc.NewServer()
 	// 注册grpc server
-	pb.RegisterRelationServiceServer(server, &service.RelationService{})
+	pb.RegisterMessageServiceServer(server, &service.MessageService{})
 	// 注册服务健康检查
 	grpc_health_v1.RegisterHealthServer(server, health.NewServer())
 
@@ -56,7 +56,7 @@ func Run() error {
 	log.Info("Init Consul Register success...")
 
 	// 启动
-	log.Infof("TikTokLite.relationSvr listening on %s:%d", config.GetGlobalConfig().SvrConfig.Host, config.GetGlobalConfig().SvrConfig.Port)
+	log.Infof("TikTokLite.messageSvr listening on %s:%d", config.GetGlobalConfig().SvrConfig.Host, config.GetGlobalConfig().SvrConfig.Port)
 	go func() {
 		err = server.Serve(listen)
 		if err != nil {
@@ -83,6 +83,6 @@ func main() {
 	defer log.Sync()
 
 	if err := Run(); err != nil {
-		log.Errorf("relationSvr run err: %v", err)
+		log.Errorf("messageSvr run err: %v", err)
 	}
 }

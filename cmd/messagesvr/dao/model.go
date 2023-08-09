@@ -1,11 +1,18 @@
 package dao
 
-type Relation struct {
-	Id       int64 `gorm:"column:id; primary_key;"`
-	Follow   int64 `gorm:"column:follow_id"`   // 博主
-	Follower int64 `gorm:"column:follower_id"` // 粉丝
+type Message struct {
+	Id         int64  `gorm:"column:id; primary_key;"`
+	ToUserId   int64  `gorm:"column:to_user_id"`
+	FromUserId int64  `gorm:"column:from_user_id"`
+	Content    string `gorm:"column:content"`
+	CreateTime int64  `gorm:"column:create_time"`
 }
 
-func (r *Relation) TableName() string {
-	return "t_relation"
+type NewMessage struct {
+	Message string
+	MsgType int64
+}
+
+func (r *Message) TableName() string {
+	return "t_message"
 }
