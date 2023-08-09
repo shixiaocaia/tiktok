@@ -28,17 +28,14 @@ func Feed(ctx *gin.Context) {
 	})
 
 	var authorIdList = make([]int64, 0)
-	var followUintList = make([]*pb.FollowUint, 0)
+	//var followUintList = make([]*pb.FollowUint, 0)
 	var favoriteUnitList = make([]*pb.FavoriteUnit, 0)
 
 	for _, video := range feedListResponse.VideoList {
 		// 视频作者ID
 		authorIdList = append(authorIdList, video.AuthorId)
 		// 视频关注
-		followUintList = append(followUintList, &pb.FollowUint{
-			SelfUserId: UserID,
-			ToUserId:   video.AuthorId,
-		})
+
 		// 视频点赞
 		favoriteUnitList = append(favoriteUnitList, &pb.FavoriteUnit{
 			UserId:  UserID,
@@ -55,9 +52,10 @@ func Feed(ctx *gin.Context) {
 		return
 	}
 
-	// 2-3 登录用户，判断视频是否点赞
 	var videoFavoriteListRep *pb.IsFavoriteVideoDictRsp
+	var FollowDic *pb.IsFollowDictRsp
 	if UserID != -1 {
+		// 2-3 登录用户，判断视频是否点赞
 		videoFavoriteListRep, err = utils.GetFavoriteSvrClient().IsFavoriteVideoDict(ctx, &pb.IsFavoriteVideoDictReq{
 			FavoriteUnitList: favoriteUnitList,
 		})
@@ -66,8 +64,18 @@ func Feed(ctx *gin.Context) {
 			response.Fail(ctx, err.Error(), nil)
 			return
 		}
+
+		// 2-4 登录用户，判断视频作者是否关注
+		SelfId, _ := ctx.Get("UserID")
+		FollowDic, err = utils.GetRelationSvrClient().IsFollowDict(ctx, &pb.IsFollowDictReq{
+			UserId: SelfId.(int64),
+		})
+		if err != nil {
+			log.Errorf("IsFollowDict failed: %v", err)
+			response.Fail(ctx, err.Error(), nil)
+			return
+		}
 	}
-	// todo 2-4 登录用户，判断视频作者是否关注
 	// 填充响应返回
 	var resp = &pb.DouyinFeedResponse{
 		VideoList: make([]*pb.Video, 0),
@@ -88,6 +96,11 @@ func Feed(ctx *gin.Context) {
 		if UserID != -1 {
 			var favoriteUint = strconv.FormatInt(UserID, 10) + "_" + strconv.FormatInt(videoRep.Id, 10)
 			videoRep.IsFavorite = videoFavoriteListRep.IsFavoriteDict[favoriteUint]
+			videoRep.Author.IsFollow = FollowDic.IsFollowDict[video.AuthorId]
+			// 忽略个人信息
+			if video.AuthorId == UserID {
+				videoRep.Author.IsFollow = true
+			}
 		}
 		resp.VideoList = append(resp.VideoList, videoRep)
 	}

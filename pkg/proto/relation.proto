@@ -1,8 +1,8 @@
 syntax = "proto3";
 
 option go_package = "../pb;pb";
-import "common.proto";
-
+// protoc --go_out=. relation.proto
+import "user.proto";
 
 service RelationService {
   // 关联关系方法
@@ -14,11 +14,10 @@ service RelationService {
   // 获取是否关注
   rpc IsFollowDict(IsFollowDictReq) returns (IsFollowDictRsp);
   // 获取好友列表
-
 }
 
 
-// 关注关系方法
+// ******
 message RelationActionReq {
   int64 self_user_id = 1;
   int64 to_user_id = 2;
@@ -26,38 +25,48 @@ message RelationActionReq {
 }
 
 message RelationActionRsp {
-  CommonResponse common_rsp = 1;
+  int32 status_code = 1;
+  string status_msg = 2;
 }
+// ******
 
+
+// ******
 message GetRelationFollowListReq {
   int64 user_id = 1;
 }
 
 message GetRelationFollowListRsp {
-  repeated int64 follow_list = 1; // 关注我关注的人
+  int32 status_code = 1;
+  string status_msg = 2;
+  repeated UserInfo user_list = 3;
 }
+// ******
 
+
+
+// ******
 message GetRelationFollowerListReq {
   int64 user_id = 1;
 }
 
 message GetRelationFollowerListRsp {
-  repeated int64 follower_list = 1; // 喜欢我的人
+  int32 status_code = 1;
+  string status_msg = 2;
+  repeated UserInfo user_list = 3;
 }
+// ******
 
 
-message FollowUint {
-  int64 self_user_id = 1; // 自己的id
-  int64 to_user_id = 2; // 对方的id列表
-}
-
+// ******
 message IsFollowDictReq {
-  repeated FollowUint follow_uint_list = 1; // 关注字典
+  int64 user_id = 1;
 }
 
 message IsFollowDictRsp {
-  map<string, bool> is_follow_dict = 1; // 是否关注字典
+  map<int64, bool> is_follow_dict = 1;
 }
+// ******
 
 
 

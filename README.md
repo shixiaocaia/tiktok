@@ -36,3 +36,13 @@
 ├── pkg proto文件
 ├── model 数据库模型
 ├── README.md
+```
+
+## 快速开始
+
+```shell
+cd script
+# 编译所有微服务
+./build_all.sh all
+# 启动/停止所有微服务
+./server_all.sh start/start all
