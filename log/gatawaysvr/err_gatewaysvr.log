@@ -1,1 +1,0 @@
-2023-08-03T15:11:14.113+0800	[31mERROR[0m	controller/ping.go:42	Greet errorrpc error: code = Unavailable desc = last resolver error: produced zero addresses
