@@ -3,13 +3,12 @@
 ulimit -c unlimited
 
 SERVER_NAME="gatewaysvr"
-# 获取当前脚本的路径
 SCRIPT_PATH=`pwd`
 SERVER_PATH=`echo ${SCRIPT_PATH%/*}`
 SERVER_BIN_PATH="${SCRIPT_PATH}/../bin"
 echo "server_name=${SERVER_NAME}"
 
-# 检测服务是否正常运行
+
 is_running()
 {   
     proc_num=$(ps -ef | grep -w "${SERVER_NAME}" | grep -w "${SERVER_BIN_PATH}" | grep -v grep | wc -l)

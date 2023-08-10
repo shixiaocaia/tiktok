@@ -1,5 +1,5 @@
 .PHONY: all
-TARGET := relationsvr
+TARGET := messagesvr
 GOENV := GOOS=linux GOARCH=amd64
 GOMACENV := GOOS=darwin GOARCH=amd64
 all:

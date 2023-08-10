@@ -44,4 +44,6 @@ cd script
 # 编译所有微服务
 ./build_all.sh all
 # 启动/停止所有微服务
-./server_all.sh start/sop all
+./server_all.sh start/stop all
+# 权限问题
+sudo chmod -R 777 /home/gopath/src/tiktok/cmd
