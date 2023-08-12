@@ -43,11 +43,11 @@
 
 ```shell
 cd script
-# 编译所有微服务
-python build_all.py 
-# 启动/停止所有微服务
-python server_all.py start/stop
-```
 # 权限问题
 sudo chmod -R 777 /home/gopath/src/tiktok/cmd
 sudo chmod -R 777 /home/gopath/src/tiktok/script
+# 编译所有微服务
+python build_all.py "" / gatewaysvr...
+# 启动/停止所有微服务
+python server_all.py start/stop
+```
