@@ -5,6 +5,7 @@ import (
 	uuid "github.com/satori/go.uuid"
 	"github.com/shixiaocaia/tiktok/cmd/usersvr/config"
 	"github.com/shixiaocaia/tiktok/cmd/usersvr/constant"
+	"github.com/shixiaocaia/tiktok/cmd/usersvr/dao/mysql"
 	"github.com/shixiaocaia/tiktok/cmd/usersvr/log"
 	"github.com/shixiaocaia/tiktok/cmd/usersvr/middleware/consul"
 	"github.com/shixiaocaia/tiktok/cmd/usersvr/service"
@@ -75,6 +76,7 @@ func Run() error {
 	} else {
 		log.Info("注销成功")
 	}
+	mysql.CloseDB()
 	return nil
 }
 
