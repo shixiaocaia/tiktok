@@ -3,13 +3,14 @@ package dao
 import (
 	"errors"
 	"github.com/shixiaocaia/tiktok/cmd/usersvr/constant"
+	"github.com/shixiaocaia/tiktok/cmd/usersvr/dao/mysql"
 	"github.com/shixiaocaia/tiktok/cmd/usersvr/log"
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 )
 
 func UserNameIsExist(username string) (bool, error) {
-	db := GetDB()
+	db := mysql.GetDB()
 	user := User{}
 	err := db.Where("user_name = ?", username).First(&user).Error
 	if err != nil {
@@ -22,7 +23,7 @@ func UserNameIsExist(username string) (bool, error) {
 }
 
 func InsertUser(username, password string) (*User, error) {
-	db := GetDB()
+	db := mysql.GetDB()
 	// 加密密文，明文存储密码不安全
 	hashPassword, _ := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	// mysql创建用户
@@ -50,7 +51,7 @@ func InsertUser(username, password string) (*User, error) {
 }
 
 func GetUserInfo(u interface{}) (User, error) {
-	db := GetDB()
+	db := mysql.GetDB()
 	user := User{}
 	var err error
 
@@ -69,7 +70,7 @@ func GetUserInfo(u interface{}) (User, error) {
 }
 
 func GetUserListInfo(userIdList []int64) ([]*User, error) {
-	db := GetDB()
+	db := mysql.GetDB()
 	var users []*User
 	log.Debugf("userIdList: %v", userIdList)
 	err := db.Where("id in ?", userIdList).Find(&users).Error

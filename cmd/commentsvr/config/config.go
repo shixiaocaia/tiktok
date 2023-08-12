@@ -13,6 +13,7 @@ type GlobalConfig struct {
 	*ConsulConfig `mapstructure:"consul"`
 	*LogConfig    `mapstructure:"log"`
 	*MySQLConfig  `mapstructure:"mysql"`
+	*RedisConfig  `mapstructure:"redis"`
 }
 
 type SvrConfig struct {
@@ -46,6 +47,15 @@ type MySQLConfig struct {
 	MaxOpenConn int    `mapstructure:"max_open_conn"` // 最大打开的连接数
 	MaxIdleTime int64  `mapstructure:"max_idle_time"` // 连接最大空闲时间
 
+}
+
+type RedisConfig struct {
+	Host     string `mapstructure:"host"`
+	Port     int    `mapstructure:"port"`
+	PassWord string `mapstructure:"password"`
+	PoolSize int    `mapstructure:"pool_size"`
+	DB       int    `mapstructure:"db"`
+	Expired  int    `mapstructure:"expired"`
 }
 
 // Init 初始化配置

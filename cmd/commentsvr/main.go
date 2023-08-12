@@ -5,6 +5,7 @@ import (
 	uuid "github.com/satori/go.uuid"
 	"github.com/shixiaocaia/tiktok/cmd/commentsvr/config"
 	"github.com/shixiaocaia/tiktok/cmd/commentsvr/constant"
+	"github.com/shixiaocaia/tiktok/cmd/commentsvr/dao"
 	"github.com/shixiaocaia/tiktok/cmd/commentsvr/log"
 	"github.com/shixiaocaia/tiktok/cmd/commentsvr/middleware/consul"
 	"github.com/shixiaocaia/tiktok/cmd/commentsvr/service"
@@ -75,6 +76,9 @@ func Run() error {
 	} else {
 		log.Info("注销成功")
 	}
+	// 关闭数据库连接
+	dao.CloseRedis()
+	dao.CloseDB()
 	return nil
 }
 

@@ -45,6 +45,7 @@ func GetCommentList(vid int64) ([]*Comment, error) {
 		}
 		return nil, err
 	}
+
 	return commentList, nil
 
 }

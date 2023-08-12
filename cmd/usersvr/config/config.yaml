@@ -30,3 +30,10 @@ mysql:
     max_idle_time: 3600
 
 
+redis:
+  host: "117.72.16.121"
+  password: "123456"
+  db: 0
+  port: 6379
+  PoolSize: 10
+

@@ -34,6 +34,7 @@
 │        └── utils 工具类
 ├── log 日志文件
 ├── pkg proto文件
+├── script 快速启动脚本
 ├── README.md
 ```
 
@@ -42,8 +43,9 @@
 ```shell
 cd script
 # 编译所有微服务
-./build_all.sh all
+python build_all.py 
 # 启动/停止所有微服务
-./server_all.sh start/stop all
+python server_all.py start/stop
+```
 # 权限问题
 sudo chmod -R 777 /home/gopath/src/tiktok/cmd
