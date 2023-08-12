@@ -52,6 +52,7 @@ func (u CommentService) CommentAction(ctx context.Context, req *pb.CommentAction
 	return rsp, nil
 }
 
+// GetCommentList 获取评论列表
 func (u CommentService) GetCommentList(ctx context.Context, req *pb.GetCommentListReq) (*pb.GetCommentListRsp, error) {
 	videoId := req.VideoId
 	// 1. 从缓存中获取评论列表
