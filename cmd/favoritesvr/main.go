@@ -5,6 +5,7 @@ import (
 	uuid "github.com/satori/go.uuid"
 	"github.com/shixiaocaia/tiktok/cmd/favoritesvr/config"
 	"github.com/shixiaocaia/tiktok/cmd/favoritesvr/constant"
+	"github.com/shixiaocaia/tiktok/cmd/favoritesvr/dao"
 	"github.com/shixiaocaia/tiktok/cmd/favoritesvr/log"
 	"github.com/shixiaocaia/tiktok/cmd/favoritesvr/middleware/consul"
 	"github.com/shixiaocaia/tiktok/cmd/favoritesvr/service"
@@ -75,6 +76,7 @@ func Run() error {
 	} else {
 		log.Info("注销成功")
 	}
+	dao.CloseDB()
 	return nil
 }
 
