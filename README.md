@@ -24,6 +24,9 @@
 │   ├── usersvr 用户服务
 │   ├── videosvr 视频服务
 │   ├── favoritesvr 点赞服务
+│   ├── relationsvr 评论服务
+│   ├── commentsvr 评论服务
+│   ├── messagesvr 聊天服务
 │   ├── 具体文件
 │        └── config 配置文件
 │        └── constant 常量值
