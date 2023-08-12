@@ -10,6 +10,7 @@
 - [x] 服务间调用：gRPC
 - [x] 数据库：MySQL
 - [x] 缓存：Redis
+- [x] 分布式锁：RedSync
 - [x] 配置：Viper
 - [x] 日志：Zap
 - [x] JWT：jwt-go
@@ -49,3 +50,4 @@ python server_all.py start/stop
 ```
 # 权限问题
 sudo chmod -R 777 /home/gopath/src/tiktok/cmd
+sudo chmod -R 777 /home/gopath/src/tiktok/script
