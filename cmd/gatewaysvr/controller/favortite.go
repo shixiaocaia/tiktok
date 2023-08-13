@@ -21,7 +21,7 @@ func FavoriteAction(ctx *gin.Context) {
 	id, _ := ctx.Get("UserID")
 	favInfo.UserID = id.(int64)
 
-	// 更新favorite表
+	// 1. 更新favorite表
 	_, err = utils.GetFavoriteSvrClient().FavoriteAction(ctx, &pb.FavoriteActionReq{
 		UserId:     favInfo.UserID,
 		VideoId:    favInfo.VideoId,
@@ -33,7 +33,7 @@ func FavoriteAction(ctx *gin.Context) {
 		return
 	}
 
-	// 1.更新 video表中 favorite_count
+	// 2.更新 video表中 favorite_count
 	_, err = utils.GetVideoSvrClient().UpdateFavoriteCount(ctx, &pb.UpdateFavoriteCountReq{
 		VideoId:    favInfo.VideoId,
 		ActionType: favInfo.ActionType,
@@ -76,6 +76,7 @@ func FavoriteAction(ctx *gin.Context) {
 		response.Fail(ctx, err.Error(), nil)
 		return
 	}
+
 	log.Infof("user: %v like/dislike video: %v", favInfo.UserID, favInfo.VideoId)
 	response.Success(ctx, "success", nil)
 }
@@ -89,7 +90,7 @@ func FavoriteList(ctx *gin.Context) {
 		return
 	}
 
-	// 1. 根据userID,查favorite表中的videoIdlist
+	// 1. 根据userID,查favorite表中的videoIdList
 	favoriteVideoIdListRsp, err := utils.GetFavoriteSvrClient().GetFavoriteVideoIdList(ctx, &pb.GetFavoriteVideoIdListReq{
 		UserId: userID.(int64),
 	})
@@ -126,31 +127,34 @@ func FavoriteList(ctx *gin.Context) {
 	var rsp = &pb.FavoriteVideoListRsp{
 		VideoList: make([]*pb.Video, 0),
 	}
-
 	for _, v := range authorIdListRsp.VideoInfoList {
-		rsp.VideoList = append(rsp.VideoList, &pb.Video{
-			Id:            v.Id,
-			PlayUrl:       v.PlayUrl,
-			CoverUrl:      v.CoverUrl,
-			FavoriteCount: v.FavoriteCount,
-			CommentCount:  v.CommentCount,
-			IsFavorite:    v.IsFavorite,
-			Title:         v.Title,
-			Author: &pb.UserInfo{
-				Id:              v.AuthorId,
-				Name:            userMap[v.AuthorId].Name,
-				Avatar:          userMap[v.AuthorId].Avatar,
-				FollowCount:     userMap[v.AuthorId].FollowCount,
-				FollowerCount:   userMap[v.AuthorId].FollowerCount,
-				IsFollow:        userMap[v.AuthorId].IsFollow,
-				BackgroundImage: userMap[v.AuthorId].BackgroundImage,
-				Signature:       userMap[v.AuthorId].Signature,
-				TotalFavorited:  userMap[v.AuthorId].TotalFavorited,
-				FavoriteCount:   userMap[v.AuthorId].FavoriteCount,
-			},
-		})
+		rsp.VideoList = append(rsp.VideoList, BuildVideoInfo(v, userMap[v.AuthorId]))
 	}
 
 	log.Infof("get user: %v favoriteList", userID)
 	response.Success(ctx, "success", rsp)
+}
+
+func BuildVideoInfo(videoInfo *pb.VideoInfo, userInfo *pb.UserInfo) *pb.Video {
+	return &pb.Video{
+		Id:            videoInfo.Id,
+		PlayUrl:       videoInfo.PlayUrl,
+		CoverUrl:      videoInfo.CoverUrl,
+		FavoriteCount: videoInfo.FavoriteCount,
+		CommentCount:  videoInfo.CommentCount,
+		IsFavorite:    videoInfo.IsFavorite,
+		Title:         videoInfo.Title,
+		Author: &pb.UserInfo{
+			Id:              userInfo.Id,
+			Name:            userInfo.Name,
+			Avatar:          userInfo.Avatar,
+			FollowCount:     userInfo.FollowCount,
+			FollowerCount:   userInfo.FollowerCount,
+			IsFollow:        userInfo.IsFollow,
+			BackgroundImage: userInfo.BackgroundImage,
+			Signature:       userInfo.Signature,
+			TotalFavorited:  userInfo.TotalFavorited,
+			FavoriteCount:   userInfo.FavoriteCount,
+		},
+	}
 }

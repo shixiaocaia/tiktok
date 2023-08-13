@@ -87,6 +87,7 @@ func (u CommentService) GetCommentList(ctx context.Context, req *pb.GetCommentLi
 	return rsp, err
 }
 
+// BuildComment 构建评论信息
 func BuildComment(comment *dao.Comment) *pb.Comment {
 	return &pb.Comment{
 		Id:         comment.Id,

@@ -10,11 +10,11 @@ import (
 	"strconv"
 )
 
+// MessageChat 聊天消息
 func MessageChat(ctx *gin.Context) {
 	UserId, _ := ctx.Get("UserID")
 	toUserId, err := strconv.ParseInt(ctx.Query("to_user_id"), 10, 64)
 	if err != nil {
-		log.Debugf("new one...")
 		log.Errorf("to_user_id is not int64: %v", err)
 		response.Fail(ctx, err.Error(), nil)
 		return
@@ -22,40 +22,27 @@ func MessageChat(ctx *gin.Context) {
 	lastTime, err := strconv.ParseInt(ctx.Query("pre_msg_time"), 10, 64)
 	if err != nil || lastTime == int64(0) {
 		log.Errorf("pre_msg_time is invalid")
+		// 保证最新的消息能够拉取到，后续比较lastTime与数据库中的时间戳比较，返回最新的消息
+		// 前端会存储最新的消息时间戳，下次拉取时传入
 		lastTime = int64(0)
 	}
-	log.Debugf("userId: %v, toUserId: %v, pre_msg_time: %v", UserId, toUserId, lastTime)
 
 	messageChatRsp, err := utils.GetMessageSvrClient().MessageChat(ctx, &pb.MessageChatReq{
 		ToUserId:   toUserId,
 		FromUserId: UserId.(int64),
 		PreMsgTime: lastTime,
 	})
-	//log.Debugf("messageChatRsp: %v", messageChatRsp)
 	if err != nil {
 		log.Errorf("MessageChat failed: %v", err)
 		response.Fail(ctx, err.Error(), nil)
 		return
 	}
 
-	//rsp := &pb.MessageChatRsp{
-	//	MessageList: make([]*pb.Message, 0),
-	//}
-	//for _, message := range messageChatRsp.MessageList {
-	//	rsp.MessageList = append(rsp.MessageList, &pb.Message{
-	//		Id:         message.Id,
-	//		ToUserId:   message.ToUserId,
-	//		FromUserId: message.FromUserId,
-	//		Content:    message.Content,
-	//		CreateTime: strconv.FormatInt(message.CreateTime.UnixNano()/1e6, 10),
-	//	})
-	//}
-
 	log.Infof("Get MessageChat success...")
 	response.Success(ctx, "success", messageChatRsp)
-
 }
 
+// MessageAction 消息操作
 func MessageAction(ctx *gin.Context) {
 	var message constant.Message
 	if err := ctx.ShouldBind(&message); err != nil {
@@ -70,7 +57,6 @@ func MessageAction(ctx *gin.Context) {
 		FromUserId: message.FromUserId,
 		Content:    message.Content,
 	})
-
 	if err != nil {
 		log.Errorf("MessageAction failed: %v", err)
 		response.Fail(ctx, err.Error(), nil)

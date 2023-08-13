@@ -14,11 +14,9 @@ import (
 
 // PublishAction 发布视频
 func PublishAction(ctx *gin.Context) {
-	// JWT鉴权后获得userid
 	userID, _ := ctx.Get("UserID")
 	title := ctx.PostForm("title")
 	data, err := ctx.FormFile("data")
-
 	if err != nil {
 		log.Errorf("upload video failed: %v", err)
 		response.Fail(ctx, err.Error(), nil)
@@ -26,29 +24,28 @@ func PublishAction(ctx *gin.Context) {
 	}
 
 	filename := filepath.Base(data.Filename)
-
-	// 文件名 + 视频存放路径 + 最终保存路径
+	// 本地存放
 	finalName := fmt.Sprintf("%s_%s", utils.RandomString(), filename)
 	videoPath := config.GetGlobalConfig().VideoPath
 	saveFile := filepath.Join(videoPath, finalName)
-
 	if err := ctx.SaveUploadedFile(data, saveFile); err != nil {
 		log.Errorf("UploadVideo failed: %v", err)
 		response.Fail(ctx, err.Error(), nil)
 		return
 	}
-
+	// 上传视频, 截取视频封面并上传minio
 	_, err = utils.GetVideoSvrClient().PublishVideo(ctx, &pb.PublishVideoRequest{
 		UserId:   userID.(int64),
 		Title:    title,
 		SaveFile: saveFile,
 	})
-
 	if err != nil {
 		log.Errorf("PublishVideo failed: %v", err)
 		response.Fail(ctx, err.Error(), nil)
 		return
 	}
+
+	// 更新用户作品数
 	_, err = utils.GetUserSvrClient().UpdateWorkCount(ctx, &pb.UpdateUserWorkCountReq{
 		UserId: userID.(int64),
 	})
@@ -57,7 +54,7 @@ func PublishAction(ctx *gin.Context) {
 		response.Fail(ctx, err.Error(), nil)
 		return
 	}
-
+	log.Info("publish video success")
 	response.Success(ctx, "success", &pb.PublishVideoResponse{})
 }
 
@@ -69,7 +66,7 @@ func GetPublishList(ctx *gin.Context) {
 		response.Fail(ctx, constant.ErrorNotLogin, nil)
 		return
 	}
-	// 获取视频
+	// 获取视频列表
 	getPublishList, err := utils.GetVideoSvrClient().GetPublishVideoList(ctx, &pb.GetPublishVideoListRequest{
 		UserId: UserID.(int64),
 	})
@@ -90,11 +87,11 @@ func GetPublishList(ctx *gin.Context) {
 		return
 	}
 
+	// 合并视频列表和作者信息
 	for _, video := range getPublishList.VideoList {
 		video.Author = getUserInfo.User
 	}
 
 	log.Infof("get author: %v videos", UserID)
 	response.Success(ctx, "success", getPublishList)
-
 }

@@ -26,12 +26,12 @@ service UserService {
   // 更新我的作品数
   rpc UpdateWorkCount(UpdateUserWorkCountReq) returns (UpdateUserWorkCountRsp);
 
-  //todo
-  rpc CacheChangeUserCount(CacheChangeUserCountReq) returns (CacheChangeUserCountRsp);
-  rpc CacheGetAuthor (CacheGetAuthorReq) returns (CacheGetAuthorRsp);
+  // todo
+  //  rpc CacheChangeUserCount(CacheChangeUserCountReq) returns (CacheChangeUserCountRsp);
+  //  rpc CacheGetAuthor (CacheGetAuthorReq) returns (CacheGetAuthorRsp);
 }
 
-// UserInfo
+
 message UserInfo {
   int64 id = 1; // 用户id
   string name = 2; // 用户名称

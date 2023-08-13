@@ -26,22 +26,18 @@ func Feed(ctx *gin.Context) {
 		LatestTime: currentTime,
 		UserId:     UserID,
 	})
-
 	var authorIdList = make([]int64, 0)
-	//var followUintList = make([]*pb.FollowUint, 0)
 	var favoriteUnitList = make([]*pb.FavoriteUnit, 0)
-
 	for _, video := range feedListResponse.VideoList {
 		// 视频作者ID
 		authorIdList = append(authorIdList, video.AuthorId)
-		// 视频关注
-
-		// 视频点赞
+		// 视频点赞信息
 		favoriteUnitList = append(favoriteUnitList, &pb.FavoriteUnit{
 			UserId:  UserID,
 			VideoId: video.Id,
 		})
 	}
+
 	// 2-2根据视频的作者id，去查作者信息
 	videoAuthorInfoRep, err := utils.GetUserSvrClient().GetUserInfoDict(ctx, &pb.GetUserInfoDictRequest{
 		UserIdList: authorIdList,
@@ -97,7 +93,7 @@ func Feed(ctx *gin.Context) {
 			var favoriteUint = strconv.FormatInt(UserID, 10) + "_" + strconv.FormatInt(videoRep.Id, 10)
 			videoRep.IsFavorite = videoFavoriteListRep.IsFavoriteDict[favoriteUint]
 			videoRep.Author.IsFollow = FollowDic.IsFollowDict[video.AuthorId]
-			// 忽略个人信息
+			// 忽略个人关注信息
 			if video.AuthorId == UserID {
 				videoRep.Author.IsFollow = true
 			}
@@ -105,5 +101,6 @@ func Feed(ctx *gin.Context) {
 		resp.VideoList = append(resp.VideoList, videoRep)
 	}
 
+	log.Infof("getFeed success")
 	response.Success(ctx, "success", resp)
 }

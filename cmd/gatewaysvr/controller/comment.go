@@ -119,6 +119,6 @@ func CommentList(ctx *gin.Context) {
 		}
 	}
 
-	log.Infof("get CommentList success...")
+	log.Infof("get CommentList success")
 	response.Success(ctx, "success", commentListRsp)
 }

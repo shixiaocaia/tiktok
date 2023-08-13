@@ -14,11 +14,12 @@ func UserLogin(ctx *gin.Context) {
 	userName := ctx.Query("username")
 	passWord := ctx.Query("password")
 
+	// 1. 简单参数校验
 	if len(userName) > 32 || len(passWord) > 32 {
 		response.Fail(ctx, constant.InvalidUserInfo, nil)
 		return
 	}
-
+	// 2. 调用userSvr的CheckPassWord服务
 	resp, err := utils.GetUserSvrClient().CheckPassWord(ctx, &pb.CheckPassWordRequest{
 		Username: userName,
 		Password: passWord,
@@ -61,32 +62,31 @@ func UserRegister(ctx *gin.Context) {
 
 func GetUserInfo(ctx *gin.Context) {
 	userId := ctx.Query("user_id")
-	uids, _ := ctx.Get("UserID")
-
-	if uids == nil {
+	uids, ok := ctx.Get("UserID")
+	if !ok {
 		log.Error("cannot get uids from ctx")
 		response.Fail(ctx, constant.ErrorToken, nil)
 		return
 	}
-
 	uid := uids.(int64)
 
+	// 1. 简单参数校验
 	if strconv.FormatInt(uid, 10) != userId {
 		log.Error("invalid uid")
 		response.Fail(ctx, constant.ErrorToken, nil)
 		return
 	}
 
-	// 根据userID获取用户信息
+	// 2. 根据userID获取用户信息
 	resp, err := utils.GetUserSvrClient().GetUserInfo(ctx, &pb.GetUserInfoRequest{
 		UserId: uid,
 	})
-
 	if err != nil {
 		log.Error("GetUserInfo failed ", err)
 		response.Fail(ctx, constant.ErrorToken, nil)
 		return
 	}
+
 	log.Info("getUserinfo success...")
 	response.Success(ctx, "success", resp)
 }
