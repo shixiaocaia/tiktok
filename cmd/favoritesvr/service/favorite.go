@@ -19,7 +19,6 @@ func (u FavoriteService) FavoriteAction(ctx context.Context, req *pb.FavoriteAct
 		// 添加记录
 		log.Infof("user: %v like video :%v", req.UserId, req.VideoId)
 		err = dao.LikeAction(req.UserId, req.VideoId)
-
 	} else {
 		// 删除记录
 		log.Infof("user: %v dislike video :%v", req.UserId, req.VideoId)

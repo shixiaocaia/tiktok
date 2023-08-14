@@ -50,7 +50,6 @@ func GetVideoListByAuthorID(authorId int64) ([]Video, error) {
 		log.Errorf("GetVideoListByAuthorID failed: %v", err)
 		return nil, err
 	}
-	log.Debugf("videos: %v", videos)
 	return videos, nil
 }
 

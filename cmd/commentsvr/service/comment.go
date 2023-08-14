@@ -30,24 +30,18 @@ func (u CommentService) CommentAction(ctx context.Context, req *pb.CommentAction
 			Content:    comment.CommentText,
 			CreateDate: comment.CreateTime.Format(constant.DefaultTime),
 		}
-		// 更新缓存
-		err = dao.CommentCacheAdd(comment)
-		if err != nil {
-			log.Errorf("CommentCacheAdd failed: %v", err)
-			return nil, err
-		}
 	} else {
 		err := dao.CommentDel(req.CommentId, req.VideoId)
 		if err != nil {
 			log.Errorf("CommentDel failed: %v", err)
 			return nil, err
 		}
-		// 更新缓存
-		err = dao.CommentCacheDel(req.CommentId, req.VideoId)
-		if err != nil {
-			log.Errorf("DelCommentCacheInfo failed: %v", err)
-			return nil, err
-		}
+	}
+
+	// 更新缓存
+	if err := dao.DelCommentCacheInfo(req.VideoId); err != nil {
+		log.Errorf("DelCommentCacheInfo failed: %v", err)
+		return nil, err
 	}
 	return rsp, nil
 }

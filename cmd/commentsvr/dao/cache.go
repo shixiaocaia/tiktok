@@ -101,49 +101,49 @@ func DelCommentCacheInfo(vid int64) error {
 	return nil
 }
 
-func CommentCacheAdd(comment *Comment) error {
-	mutex, err := acquireLock(constant.CommentLock)
-	if err != nil {
-		log.Errorf("acquire lock err: %v", err)
-		releaseLock(mutex)
-		return err
-	}
-	defer releaseLock(mutex)
-
-	redisKey := constant.CommentInfoPrefix + strconv.FormatInt(comment.VideoId, 10)
-	redisCli := GetRedisCli()
-	commentBytes, err := json.Marshal(comment)
-	if err != nil {
-		log.Errorf("json marshal comment err: %v", err)
-		return err
-	}
-	commentIDStr := strconv.FormatInt(comment.Id, 10)
-	err = redisCli.HSet(redisCli.Context(), redisKey, commentIDStr, string(commentBytes)).Err()
-	if err != nil {
-		log.Errorf("redis hset comment err: %v", err)
-		return err
-	}
-	log.Info("redis hset comment success")
-	return nil
-
-}
-
-func CommentCacheDel(commentId, vid int64) error {
-	mutex, err := acquireLock(constant.CommentLock)
-	if err != nil {
-		log.Errorf("acquire lock err: %v", err)
-		releaseLock(mutex)
-		return err
-	}
-	defer releaseLock(mutex)
-
-	redisKey := constant.CommentInfoPrefix + strconv.FormatInt(vid, 10)
-	redisCli := GetRedisCli()
-	commentIDStr := strconv.FormatInt(commentId, 10)
-	err = redisCli.HDel(context.Background(), redisKey, commentIDStr).Err()
-	if err != nil {
-		log.Errorf("redis hdel comment err:%v", err)
-		return err
-	}
-	return nil
-}
+//func CommentCacheAdd(comment *Comment) error {
+//	mutex, err := acquireLock(constant.CommentLock)
+//	if err != nil {
+//		log.Errorf("acquire lock err: %v", err)
+//		releaseLock(mutex)
+//		return err
+//	}
+//	defer releaseLock(mutex)
+//
+//	redisKey := constant.CommentInfoPrefix + strconv.FormatInt(comment.VideoId, 10)
+//	redisCli := GetRedisCli()
+//	commentBytes, err := json.Marshal(comment)
+//	if err != nil {
+//		log.Errorf("json marshal comment err: %v", err)
+//		return err
+//	}
+//	commentIDStr := strconv.FormatInt(comment.Id, 10)
+//	err = redisCli.HSet(redisCli.Context(), redisKey, commentIDStr, string(commentBytes)).Err()
+//	if err != nil {
+//		log.Errorf("redis hset comment err: %v", err)
+//		return err
+//	}
+//	log.Info("redis hset comment success")
+//	return nil
+//
+//}
+//
+//func CommentCacheDel(commentId, vid int64) error {
+//	mutex, err := acquireLock(constant.CommentLock)
+//	if err != nil {
+//		log.Errorf("acquire lock err: %v", err)
+//		releaseLock(mutex)
+//		return err
+//	}
+//	defer releaseLock(mutex)
+//
+//	redisKey := constant.CommentInfoPrefix + strconv.FormatInt(vid, 10)
+//	redisCli := GetRedisCli()
+//	commentIDStr := strconv.FormatInt(commentId, 10)
+//	err = redisCli.HDel(context.Background(), redisKey, commentIDStr).Err()
+//	if err != nil {
+//		log.Errorf("redis hdel comment err:%v", err)
+//		return err
+//	}
+//	return nil
+//}

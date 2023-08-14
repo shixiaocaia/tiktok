@@ -77,6 +77,7 @@ func Run() error {
 		log.Info("注销成功")
 	}
 	dao.CloseDB()
+	dao.CloseRedis()
 	return nil
 }
 

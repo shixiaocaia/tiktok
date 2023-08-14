@@ -14,6 +14,7 @@ type GlobalConfig struct {
 	*LogConfig    `mapstructure:"log"`
 	*MySQLConfig  `mapstructure:"mysql"`
 	*MinioConfig  `mapstructure:"minio"`
+	*RedisConfig  `mapstructure:"redis"`
 }
 
 type SvrConfig struct {
@@ -59,6 +60,15 @@ type MinioConfig struct {
 	VideoPath       string `mapstructure:"video_path"`
 	// LogFile   string `mapstructure:"logfile"`
 	PicPath string `mapstructure:"pic_path"`
+}
+
+type RedisConfig struct {
+	Host     string `mapstructure:"host"`
+	Port     int    `mapstructure:"port"`
+	PassWord string `mapstructure:"password"`
+	PoolSize int    `mapstructure:"pool_size"`
+	DB       int    `mapstructure:"db"`
+	Expired  int    `mapstructure:"expired"`
 }
 
 // Init 初始化配置

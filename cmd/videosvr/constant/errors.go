@@ -10,3 +10,7 @@ const (
 const (
 	ConsulRegister = "consul Register error"
 )
+
+const (
+	VideosInfoPrefix = "videos_info"
+)

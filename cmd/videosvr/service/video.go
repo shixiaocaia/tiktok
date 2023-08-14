@@ -15,14 +15,34 @@ type VideoService struct {
 	pb.UnimplementedVideoServiceServer
 }
 
+const (
+	maxRetries = 3
+	retryDelay = 500 * time.Millisecond
+)
+
 // GetFeedList 获取一组视频基本信息
 func (u VideoService) GetFeedList(ctx context.Context, req *pb.GetFeedListRequest) (*pb.GetFeedListResponse, error) {
 	// 返回以时间戳为止的一组视频
-	videoList, err := dao.GetVideoListByFeed(req.LatestTime)
-	if err != nil {
-		log.Error("GetVideoListByFeed failed")
-		return nil, err
+	// 1. 查缓存
+	videoList := make([]dao.Video, 0)
+	var err error
+	videoList, err = dao.GetVideoListCache(req.LatestTime)
+	if err != nil || len(videoList) == 0 {
+		log.Info("GetVideoCache failed")
+		videoList, err = dao.GetVideoListByFeed(req.LatestTime)
+		if err != nil {
+			log.Error("GetVideoListByFeed failed")
+			return nil, err
+		}
+		// 更新缓存
+		err = dao.SetVideoCache(videoList)
+		if err != nil {
+			log.Error("SetVideoCache failed")
+		}
+	} else {
+		log.Info("GetVideoCache success")
 	}
+
 	// 返回下一批视频的最新时间
 	nextTime := time.Now().UnixNano() / 1e6
 	if len(videoList) == 20 {
@@ -78,13 +98,18 @@ func (u VideoService) PublishVideo(ctx context.Context, req *pb.PublishVideoRequ
 	}
 	log.Infof("UpImageFile cost %v", time.Since(startTime))
 
-	log.Debugf("title: %v", req.Title)
 	err = dao.InsertVideo(req.UserId, playUrl, coverUrl, req.Title)
 	if err != nil {
 		log.Errorf("InsertVideo failed: %v", err)
 		return nil, err
 	}
-	// todo 更新author视频数
+
+	// 更新缓存
+	err = dao.UpdateVideoCache()
+	if err != nil {
+		log.Errorf("UpdateVideoCache failed: %v", err)
+		return nil, err
+	}
 
 	return &pb.PublishVideoResponse{}, nil
 }
@@ -146,5 +171,60 @@ func (u VideoService) UpdateCommentCount(ctx context.Context, req *pb.UpdateComm
 	if err != nil {
 		return nil, err
 	}
+
+	// 更新VideoInfo中评论数缓存
+	for i := 0; i < maxRetries; i++ {
+		err = dao.UpdateCommentCountCache(req.VideoId, req.ActionType)
+		if err != nil {
+			log.Errorf("UpdateCommentCacheInfo failed: %v", err)
+			time.Sleep(retryDelay)
+			continue
+		}
+		if err == nil {
+			log.Info("UpdateVideoCache success")
+			break
+		}
+	}
+	// 更新缓存失败，清空缓存，改为旁路缓存
+	if err != nil {
+		err = dao.UpdateVideoCache()
+		if err != nil {
+			log.Errorf("del videoCache failed: %v", err)
+			return nil, err
+		}
+	}
+
 	return &pb.UpdateCommentCountRsp{}, nil
+}
+
+// UpdateFavoriteCount 更新视频点赞数
+func (u VideoService) UpdateFavoriteCount(ctx context.Context, req *pb.UpdateFavoriteCountReq) (*pb.UpdateFavoriteCountRsp, error) {
+	err := dao.UpdateFavorite(req.ActionType, req.VideoId)
+	if err != nil {
+		log.Errorf("UpdateFavoriteCount failed: %v", err)
+		return nil, err
+	}
+
+	// 更新VideoInfo中点赞数缓存
+	for i := 0; i < maxRetries; i++ {
+		err = dao.UpdateFavoriteCountCache(req.VideoId, req.ActionType)
+		if err != nil {
+			log.Errorf("UpdateFavoriteCountCache failed: %v", err)
+			time.Sleep(retryDelay)
+			continue
+		}
+		if err == nil {
+			log.Info("UpdateVideoCache success")
+			break
+		}
+	}
+	// 更新缓存失败，清空缓存，改为旁路缓存
+	if err != nil {
+		err = dao.UpdateVideoCache()
+		if err != nil {
+			log.Errorf("del videoCache failed: %v", err)
+			return nil, err
+		}
+	}
+	return &pb.UpdateFavoriteCountRsp{}, nil
 }
