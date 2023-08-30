@@ -8,6 +8,7 @@
 - [x] ORM: Gorm
 - [x] 服务注册与发现：Consul
 - [x] 服务间调用：gRPC
+- [x] 存储：Minio
 - [x] 数据库：MySQL
 - [x] 缓存：Redis
 - [x] 分布式锁：RedSync
