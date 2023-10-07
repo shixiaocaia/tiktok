@@ -3,7 +3,7 @@ ping: "hello world"
 svr_config:
   port: 8005
   mode: "dev"
-  host: "117.72.16.121"
+  host: "124.220.156.104"
   video_path: "/root/tiktok/video"
   user_svr_name: "usersvr"
   video_svr_name: "videosvr"
@@ -22,7 +22,7 @@ log:
   max_backups: 7
 
 consul:
-    host: "117.72.16.121"
+    host: "124.220.156.104"
     port: 8500
     tags:
       - "gatewaysvr"

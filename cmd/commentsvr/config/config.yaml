@@ -1,7 +1,7 @@
 svr_config:
   port: 8002
   name: "commentsvr"
-  host: "117.72.16.121"
+  host: "124.220.156.104"
 
 log:
   level: "debug"
@@ -13,23 +13,23 @@ log:
 
 
 consul:
-    host: "117.72.16.121"
-    port: 8500
-    tags:
-      - "commentsvr"
+  host: "124.220.156.104"
+  port: 8500
+  tags:
+    - "commentsvr"
 
 mysql:
-    username: "root"
-    password: "123456"
-    host: "117.72.16.121"
-    port: "8086"
-    database: "camps_tiktok"
-    max_idle_conn: 10
-    max_open_conn: 100
-    max_idle_time: 3600
+  username: "root"
+  password: "123456"
+  host: "124.220.156.104"
+  port: "8086"
+  database: "mini_tiktok"
+  max_idle_conn: 10
+  max_open_conn: 100
+  max_idle_time: 3600
 
 redis:
-  host: "117.72.16.121"
+  host: "124.220.156.104"
   password: "123456"
   db: 0
   port: 6379

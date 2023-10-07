@@ -5,7 +5,7 @@ FOREIGN_KEY_CHECKS = 0;
 -- ----------------------------
 -- Table structure for comments
 -- ----------------------------
-USE camps_tiktok;
+USE mini_tiktok;
 
 DROP TABLE IF EXISTS `t_comment`;
 CREATE TABLE `t_comment`

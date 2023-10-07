@@ -1,7 +1,7 @@
 svr_config:
   port: 8004
   name: "videosvr"
-  host: "117.72.16.121"
+  host: "124.220.156.104"
 
 
 log:
@@ -14,7 +14,7 @@ log:
 
 
 consul:
-    host: "117.72.16.121"
+    host: "124.220.156.104"
     port: 8500
     tags:
       - "usersvr"
@@ -22,15 +22,15 @@ consul:
 mysql:
     username: "root"
     password: "123456"
-    host: "117.72.16.121"
+    host: "124.220.156.104"
     port: "8086"
-    database: "camps_tiktok"
+    database: "mini_tiktok"
     max_idle_conn: 10
     max_open_conn: 100
     max_idle_time: 3600
 
 redis:
-  host: "117.72.16.121"
+  host: "124.220.156.104"
   password: "123456"
   db: 0
   port: 6379
@@ -39,10 +39,10 @@ redis:
 
 
 minio:
-  host: "117.72.16.121"
+  host: "124.220.156.104"
   port: "9000"
-  access_key_id: "WhmqIGLF5cdZLL3ebGd1"
-  secret_access_key: "iSWDFxB3ZLCLxRHVPJnqdKt8GqEb7F9rXZxXtDSJ"
+  access_key_id: "mAVisPmIZNA1d9bt6ENW"
+  secret_access_key: "xDygOlvOFErjCrX1gm8oEVICUCY2bJVVyB5lwogL"
   video_buckets: video
   pic_buckets: pic
   video_path: "/root/tiktok/video"

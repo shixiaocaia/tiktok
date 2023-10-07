@@ -15,7 +15,7 @@ else:
 # 遍历文件夹列表
 for folder in folders:
     # 构建文件夹路径
-    folder_path = os.path.join("/home/gopath/src/tiktok/cmd", folder, "script")
+    folder_path = os.path.join("/home/ubuntu/go/src/tiktok/cmd", folder, "script")
 
     # 切换到文件夹路径
     os.chdir(folder_path)
