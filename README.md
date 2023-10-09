@@ -3,19 +3,16 @@
 
 ## 技术选型
 
-- [x] 语言：Go 1.19以上
+- [x] Go 1.20
 - [x] HTTP框架：Gin
-- [x] ORM: Gorm
-- [x] 服务注册与发现：Consul
-- [x] 服务间调用：gRPC
-- [x] 存储：Minio
+- [x] ORM框架：Gorm
+- [x] RPC框架：gRPC
 - [x] 数据库：MySQL
 - [x] 缓存：Redis
-- [x] 分布式锁：RedSync
-- [x] 配置：Viper
+- [x] 服务注册与发现：Consul
 - [x] 日志：Zap
-- [x] JWT：jwt-go
-- [x] 代码生成：protoc-gen-go
+- [x] 配置文件：Viper
+- [x] 存储：Minio
 
 ## 目录结构
 
@@ -37,45 +34,16 @@
 │        └── response 响应
 │        └── service 服务具体逻辑
 │        └── utils 工具类
-├── log 日志文件
 ├── pkg proto文件
 ├── script 快速启动脚本
-    ├── build_all.py 编译所有微服务
-    ├── server_all.py 启动/停止所有微服务
-    ├── redis.sh 初始化
-    ├── mysql.sh table初始化
-├── README.md
+    └── build_all.py 编译所有微服务
+    └── server_all.py 启动/停止所有微服务
+    └── init_db.sql 数据库初始化
+    └── redis.sh 初始化
 ```
 
-## 快速开始
+## 项目总结与反思
 
-```shell
-cd script
-# 权限问题
-sudo chmod -R 777 /home/gopath/src/tiktok/cmd
-sudo chmod -R 777 /home/gopath/src/tiktok/script
-# 初始化数据库
-./mysql.sh
-# 初始化redis
-./redis.sh
-# 修改配置文件
-vim .../cmd/svr/config/config.yaml
-# 编译所有微服务
-python build_all.py
-# 启动 /停止所有微服务
-python server_all.py start/stop all/单个微服务
-```
-## 项目反思
+- [x] 上传视频时间过长，影响用户体验，需要优化
+- [x] 代码风格有待完善，部分功能出现冗余
 
-- [x] 项目结构不够清晰，需要进一步优化
-- [x] 缓存目前只存了comment部分，进一步可以完善用户信息，视频信息等
-- [x] 多人点赞，关注等操作时数据库和缓存更新可能不一致
-- [x] 服务间调用时，需要进一步优化，目前是直接调用，可以使用消息队列等方式
-- [x] 对于除了JWT校验，缺少对于参数合法性进一步校验
-
-## 相关文档
-
-- [极简版抖音APP接口文档](https://apifox.com/apidoc/shared-09d88f32-0b6c-4157-9d07-a36d32d7a75c)
-- [李文周的博客](https://www.liwenzhou.com/)
-- [gin框架文档](https://gin-gonic.com/zh-cn/docs/)
-- [gorm文档](https://gorm.io/zh_CN/docs/index.html)
