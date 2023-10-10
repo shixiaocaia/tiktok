@@ -12,8 +12,8 @@ const (
 )
 
 type response struct {
-	StatusCode int32
-	StatusMsg  string
+	StatusCode int64  `json:"status_code"` // 状态码，0-成功，其他值-失败
+	StatusMsg  string `json:"status_msg"`  // 返回状态描述
 }
 
 func Response(ctx *gin.Context, httpStatus int, v interface{}) {
@@ -51,9 +51,12 @@ func setResponse(ctx *gin.Context, StatusCode int64, StatusMsg string, v interfa
 		log.Debug("cant set StatusMsg")
 	}
 	fieldCode := getValue.Elem().FieldByName("StatusCode")
+	if !fieldCode.IsValid() {
+		log.Debug("Field StatusCode not found in the structure")
+	}
 	if fieldCode.CanSet() {
 		fieldCode.SetInt(StatusCode)
 	} else {
-		log.Debug("cant set StatusMsg")
+		log.Debug("cant set StatusCode")
 	}
 }
